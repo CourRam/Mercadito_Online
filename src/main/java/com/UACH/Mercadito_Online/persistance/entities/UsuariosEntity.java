@@ -15,22 +15,28 @@ import java.util.List;
 @Table(name = "Usuarios")
 public class UsuariosEntity {
 
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idUsuario;
 
+    @Column(nullable = false, length = 100)
     private String nombre;
-    @Column(unique = true, nullable = false)
+
+    @Column(nullable = false, unique = true, length = 100)
     private String correo;
-    @Column(nullable = false)
-    private String contraseña;
+
+    @Column(nullable = false, length = 255)
+    private String password;
+
+    @Column(length = 20)
     private String telefono;
+
+    @Column(length = 255)
     private String direccion;
 
-    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
+    // Relación con productos (un usuario puede publicar varios productos)
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProductosEntity> productos;
-
-    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
-    private List<CarritoEntity> carritos;
 
 }

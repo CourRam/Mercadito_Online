@@ -24,7 +24,9 @@ public class ProductosEntity {
     @Column(nullable = false, length = 100)
     private String nombre;
 
-    @Column(nullable = false, columnDefinition = "TEXT")
+
+    @Lob
+    @Column(nullable = false)
     private String descripcion;
 
     @Column(nullable = false, precision = 10, scale = 2)

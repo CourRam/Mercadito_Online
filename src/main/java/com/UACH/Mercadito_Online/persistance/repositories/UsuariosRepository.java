@@ -7,6 +7,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface UsuariosRepository extends JpaRepository<UsuariosEntity, Long> {
-    // Puedes agregar consultas personalizadas si lo necesitas
+
     UsuariosEntity findByCorreo(String correo);
 }

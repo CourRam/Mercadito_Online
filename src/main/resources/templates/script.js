@@ -1,4 +1,4 @@
-//      Productos fake
+// --- Productos simulados ---
 const productos = [
   {
     id: 1,

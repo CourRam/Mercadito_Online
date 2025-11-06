@@ -7,19 +7,19 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
-import java.util.Objects;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode
 @Embeddable
-public class DetalleCarritoId implements Serializable {
+public class DetalleCarritoID implements Serializable {
 
     private Long idCarrito;
     private Long idProducto;
 
     /* 
-    // Getters, setters, equals, hashCode
+    
     public Long getIdCarrito() { return idCarrito; }
     public void setIdCarrito(Long idCarrito) { this.idCarrito = idCarrito; }
 

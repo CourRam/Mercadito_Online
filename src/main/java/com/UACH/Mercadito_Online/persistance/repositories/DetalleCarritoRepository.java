@@ -12,4 +12,7 @@ import java.util.List;
 public interface DetalleCarritoRepository extends JpaRepository<DetalleCarritoEntity, DetalleCarritoID> {
     List<DetalleCarritoEntity> findByCarritoIdCarrito(Long idCarrito);
     List<DetalleCarritoEntity> findByCarrito(CarritoEntity carrito);
+
+    List<DetalleCarritoEntity> findByCarrito_IdCarrito(Long idCarrito);
+
 }

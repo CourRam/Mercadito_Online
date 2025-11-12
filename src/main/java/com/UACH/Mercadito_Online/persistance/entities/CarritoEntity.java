@@ -1,7 +1,4 @@
 package com.UACH.Mercadito_Online.persistance.entities;
-
-
-
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;

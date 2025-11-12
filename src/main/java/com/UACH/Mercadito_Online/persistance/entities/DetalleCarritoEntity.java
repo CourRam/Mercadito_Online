@@ -2,7 +2,6 @@ package com.UACH.Mercadito_Online.persistance.entities;
 
 
 import java.math.BigDecimal;
-
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -19,7 +18,6 @@ public class DetalleCarritoEntity {
     private DetalleCarritoID id;
 
     private Integer cantidad;
-
 
     @ManyToOne
     @MapsId("idCarrito")

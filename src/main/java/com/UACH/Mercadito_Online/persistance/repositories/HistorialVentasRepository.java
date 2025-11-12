@@ -13,6 +13,7 @@ import java.util.List;
 public interface HistorialVentasRepository extends JpaRepository<HistorialVentasEntity, Long> {
     List<HistorialVentasEntity> findByUsuario_IdUsuario(Long idUsuario);
 
+    /* No jala mi chingadera
     @Query("""
         SELECT COALESCE(SUM(d.subtotal), 0)
         FROM HistorialVentasEntity h
@@ -22,6 +23,17 @@ public interface HistorialVentasRepository extends JpaRepository<HistorialVentas
         WHERE p.vendedor.idUsuario = :idUsuario
           AND h.estado = 'COMPLETADA'
     """)
+    BigDecimal calcularGananciasPorVendedor(@Param("idUsuario") Long idUsuario);
+     aver si asi si quiere eesta madre*/
+    @Query("""
+    SELECT COALESCE(SUM(d.subtotal), 0)
+    FROM HistorialVentasEntity h
+    JOIN h.carrito c
+    JOIN c.detalleCarrito d
+    JOIN d.producto p
+    WHERE p.usuario.idUsuario = :idUsuario
+      AND h.estado = 'COMPLETADA'
+""")
     BigDecimal calcularGananciasPorVendedor(@Param("idUsuario") Long idUsuario);
 
     //List<HistorialVentasEntity> findByProductoIdProducto(Long idProducto); Arreglar si se llega a usar

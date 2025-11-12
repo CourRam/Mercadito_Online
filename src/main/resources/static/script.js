@@ -1,4 +1,4 @@
-const API_URL = "http://localhost:8081/api/productos"; 
+const API_URL = "http://localhost:8081/api/productos/listar"; 
 
 // Cargar productos al inicio
 document.addEventListener("DOMContentLoaded", cargarProductos);

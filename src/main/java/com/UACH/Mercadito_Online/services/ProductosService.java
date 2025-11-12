@@ -64,7 +64,7 @@ public class ProductosService {
         producto.setStock(stock);
         producto.setUsuario(usuario);
         producto.setCategoria(categoria);
-        producto.setImagenUrl("/" + filePath.toString().replace("\\", "/"));
+        producto.setImagenUrl("/uploads/productos/" + fileName);
 
         return productosRepository.save(producto);
     }

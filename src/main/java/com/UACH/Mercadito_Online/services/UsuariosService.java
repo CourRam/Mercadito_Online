@@ -32,7 +32,7 @@ public class UsuariosService {
                 .anyMatch(u -> u.getCorreo().equalsIgnoreCase(email))) {
             throw new IllegalArgumentException("Ya existe un usuario con ese correo");
         }
-
+        
         UsuariosEntity usuario = new UsuariosEntity();
         usuario.setNombre(nombre);
         usuario.setCorreo(email);

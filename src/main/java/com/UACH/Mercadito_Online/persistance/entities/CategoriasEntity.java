@@ -21,14 +21,15 @@ public class CategoriasEntity {
     private Long idCategoria;
 
     private String nombre;
+
     @Lob
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String descripcion;
 
 
 
-    @OneToMany(mappedBy = "categoria", cascade = CascadeType.ALL)
-    private List<ProductosEntity> productos;
+    //@OneToMany(mappedBy = "categoria", cascade = CascadeType.ALL)
+    //private List<ProductosEntity> productos;
 
     
 }

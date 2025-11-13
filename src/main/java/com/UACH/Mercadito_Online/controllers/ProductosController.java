@@ -1,11 +1,12 @@
 package com.UACH.Mercadito_Online.controllers;
 
+import com.UACH.Mercadito_Online.DTO.ProductosDTO;
 import com.UACH.Mercadito_Online.persistance.entities.ProductosEntity;
 import com.UACH.Mercadito_Online.services.ProductosService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.List;
@@ -34,6 +35,11 @@ public class ProductosController {
     @GetMapping("/listar")
     public List<ProductosEntity> listarProductos() {
         return productosService.listarProductos();
+    }
+
+    @GetMapping("/listarDTO")
+    public ResponseEntity<List<ProductosDTO>> listarProductosDTO() {
+        return ResponseEntity.ok(productosService.listarProductosDTO());
     }
 
     @GetMapping("/{id}")

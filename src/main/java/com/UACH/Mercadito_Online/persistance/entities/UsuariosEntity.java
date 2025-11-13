@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import java.util.List;
+//import java.util.List;
 
 
 @Entity
@@ -36,7 +36,7 @@ public class UsuariosEntity {
     private String direccion;
 
     // Relación con productos (un usuario puede publicar varios productos)
-    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ProductosEntity> productos;
+    //@OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
+    //private List<ProductosEntity> productos;
 
 }

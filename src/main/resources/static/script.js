@@ -1,4 +1,4 @@
-const API_URL = "http://localhost:8081/api/productos/listar"; 
+const API_URL = "http://localhost:8081/api/productos/listarDTO"; 
 
 // Cargar productos al inicio
 document.addEventListener("DOMContentLoaded", cargarProductos);
@@ -23,7 +23,7 @@ async function cargarProductos() {
             const card = document.createElement("div");
             card.className = "product-card";
             card.innerHTML = `
-                <img src="${prod.imagen || 'https://via.placeholder.com/250x180?text=Sin+Imagen'}" alt="${prod.nombre}">
+                <img src="${prod.imagenUrl || 'https://via.placeholder.com/250x180?text=Sin+Imagen'}" alt="${prod.nombre}">
                 <div class="info">
                     <h3>${prod.nombre}</h3>
                     <p>${prod.descripcion || 'Sin descripción'}</p>

@@ -1,5 +1,6 @@
 package com.UACH.Mercadito_Online.services;
 
+import com.UACH.Mercadito_Online.DTO.ProductosDTO;
 import com.UACH.Mercadito_Online.persistance.entities.CategoriasEntity;
 import com.UACH.Mercadito_Online.persistance.entities.ProductosEntity;
 import com.UACH.Mercadito_Online.persistance.entities.UsuariosEntity;
@@ -88,6 +89,20 @@ public class ProductosService {
 
     public List<ProductosEntity> listarProductos() {
         return productosRepository.findAll();
+    }
+
+    public List<ProductosDTO> listarProductosDTO() {
+        return productosRepository.findAll().stream()
+        .map(p -> new ProductosDTO(
+                p.getIdProducto(),
+                p.getNombre(),
+                p.getDescripcion(),
+                p.getPrecio(),
+                p.getImagenUrl(),
+                p.getCategoria() != null ? p.getCategoria().getNombre() : null,
+                p.getUsuario() != null ? p.getUsuario().getNombre() : null
+            ))
+            .toList();
     }
 
     public ProductosEntity obtenerPorId(Long id) {

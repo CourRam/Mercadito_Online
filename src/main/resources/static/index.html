@@ -16,9 +16,25 @@
     </header>
 
     <main>
-        <section id="productos-container" class="productos-container">
-            <p>Cargando productos...</p>
-        </section>
+    
+    <section id="filtros" class="filtros">
+        <input type="text" id="input-busqueda" placeholder="Buscar productos..." oninput="filtrarProductos()">
+
+        <select id="select-categoria" onchange="filtrarProductos()">
+            <option value="">Todas las categorías</option>
+        </select>
+
+        <div class="rango-precio">
+            <input type="number" id="precio-min" placeholder="Precio mínimo" oninput="filtrarProductos()">
+            <input type="number" id="precio-max" placeholder="Precio máximo" oninput="filtrarProductos()">
+        </div>
+
+        
+    </section>
+
+    <section id="productos-container" class="productos-container">
+        <p>Cargando productos...</p>
+    </section>
     </main>
 
     <footer>

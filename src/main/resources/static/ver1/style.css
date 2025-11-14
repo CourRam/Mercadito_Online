@@ -35,46 +35,6 @@ nav button:hover {
     background-color: #e4e6eb;
 }
 
-.filtros {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: center;
-    gap: 12px;
-    margin: 20px auto;
-    padding: 10px;
-    background: #f9f9f9;
-    border-radius: 12px;
-    max-width: 900px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-}
-
-.filtros input,
-.filtros select {
-    padding: 8px 10px;
-    font-size: 1em;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-}
-
-.rango-precio input {
-    width: 130px;
-}
-
-.filtros button {
-    padding: 8px 14px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-}
-
-.filtros button:hover {
-    background-color: #0056b3;
-}
-
-
 /* ====== PRODUCTOS ====== */
 .productos-container {
     display: grid;

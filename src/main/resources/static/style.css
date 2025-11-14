@@ -14,9 +14,21 @@ header {
     align-items: center;
 }
 
+header a:link,
+header a:visited,
+header a:hover,
+header a:active {
+    text-decoration: none;
+    color: white;
+}
+
+
+
 header h1 {
     margin: 0;
     font-size: 1.5rem;
+    text-decoration: none;     
+    color: white;
 }
 
 nav button {

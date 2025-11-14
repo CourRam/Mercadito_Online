@@ -15,6 +15,6 @@ public class ProductosDTO {
     private String descripcion;
     private BigDecimal precio;
     private String imagenUrl;
-    private String categoriaNombre;
-    private String vendedorNombre;
+    private Long categoriaId;
+    private Long vendedorId;
 }

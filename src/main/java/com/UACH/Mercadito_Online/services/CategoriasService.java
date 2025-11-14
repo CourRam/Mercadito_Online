@@ -1,5 +1,7 @@
 package com.UACH.Mercadito_Online.services;
 
+import com.UACH.Mercadito_Online.DTO.CategoriasDTO;
+import com.UACH.Mercadito_Online.DTO.ProductosDTO;
 import com.UACH.Mercadito_Online.persistance.entities.CategoriasEntity;
 import com.UACH.Mercadito_Online.persistance.repositories.CategoriasRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +31,16 @@ public class CategoriasService {
     // Listar todas las categorías
     public List<CategoriasEntity> listarCategorias() {
         return categoriasRepository.findAll();
+    }
+
+    //DTO 
+    public List<CategoriasDTO> listarCategoriasDTO() {
+        return categoriasRepository.findAll().stream()
+        .map(c -> new CategoriasDTO(
+                c.getIdCategoria(),
+                c.getNombre()
+            ))
+            .toList();
     }
 
     // Buscar categoría por ID

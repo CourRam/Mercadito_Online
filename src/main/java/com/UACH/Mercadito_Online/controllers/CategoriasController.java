@@ -3,7 +3,9 @@ package com.UACH.Mercadito_Online.controllers;
 import com.UACH.Mercadito_Online.persistance.entities.CategoriasEntity;
 import com.UACH.Mercadito_Online.services.CategoriasService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import com.UACH.Mercadito_Online.DTO.CategoriasDTO;
 
 import java.util.List;
 
@@ -28,6 +30,12 @@ public class CategoriasController {
     @GetMapping("/listar")
     public List<CategoriasEntity> listarCategorias() {
         return categoriasService.listarCategorias();
+    }
+
+    // Listar categorías por DTO
+    @GetMapping("/listarDTO")
+    public ResponseEntity<List<CategoriasDTO>> listarCategoriasDTO() {
+        return ResponseEntity.ok(categoriasService.listarCategoriasDTO());
     }
 
     // Obtener por ID

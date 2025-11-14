@@ -13,7 +13,7 @@ public class HomeController {
     
     @GetMapping("/")
     public String home() {
-        return "forward:/index.html";
+        return "forward:/index2.html";
     }
     
 }

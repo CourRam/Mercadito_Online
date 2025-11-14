@@ -32,8 +32,8 @@ public interface HistorialVentasRepository extends JpaRepository<HistorialVentas
     JOIN c.detalleCarrito d
     JOIN d.producto p
     WHERE p.usuario.idUsuario = :idUsuario
-      AND h.estado = 'COMPLETADA'
-""")
+    AND h.estado = 'COMPLETADA'
+    """)
     BigDecimal calcularGananciasPorVendedor(@Param("idUsuario") Long idUsuario);
 
     //List<HistorialVentasEntity> findByProductoIdProducto(Long idProducto); Arreglar si se llega a usar

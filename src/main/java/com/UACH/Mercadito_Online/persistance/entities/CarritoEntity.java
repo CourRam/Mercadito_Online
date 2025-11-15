@@ -1,6 +1,5 @@
 package com.UACH.Mercadito_Online.persistance.entities;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -10,7 +9,7 @@ import java.util.List;
 @Entity
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
+//@AllArgsConstructor
 @Table(name = "Carrito")
 public class CarritoEntity {
 
@@ -27,6 +26,18 @@ public class CarritoEntity {
 
     @OneToMany(mappedBy = "carrito", cascade = CascadeType.ALL)
     private List<DetalleCarritoEntity> detalleCarrito;
+
+    @Column(length = 30, nullable = false)
+    private String estado; //  "COMPLETADA", "CANCELADA", "EN_PROCESO" (maybe creo una lista de estas opciones)
+
+    public CarritoEntity(Long idCarrito, Date fechaCreacion, UsuariosEntity usuario, List<DetalleCarritoEntity> detalleCarrito) {
+    this.idCarrito = idCarrito;
+    this.fechaCreacion = fechaCreacion;
+    this.usuario = usuario;
+    this.detalleCarrito = detalleCarrito;
+    this.estado="EN_PROCESO";
+}
+
 
     
 }

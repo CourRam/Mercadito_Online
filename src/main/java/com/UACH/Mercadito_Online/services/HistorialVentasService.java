@@ -32,11 +32,14 @@ public class HistorialVentasService {
         return historialVentasRepository.findAll();
     }
 
+
+
     // Buscar una venta por ID
     public HistorialVentasEntity buscarPorId(Long idVenta) {
         return historialVentasRepository.findById(idVenta)
                 .orElseThrow(() -> new IllegalArgumentException("Venta no encontrada con ID: " + idVenta));
     }
+
 
     // Registrar una nueva venta desde un carrito
     @Transactional
@@ -59,7 +62,7 @@ public class HistorialVentasService {
         venta.setCarrito(carrito);
         venta.setFecha(LocalDateTime.now());
         venta.setTotal(total);
-        venta.setEstado("COMPLETADA");
+        //venta.setEstado("COMPLETADA");
 
         // Guardar venta
         HistorialVentasEntity ventaGuardada = historialVentasRepository.save(venta);
@@ -72,7 +75,7 @@ public class HistorialVentasService {
         }
 
         // Vaciar carrito
-        detalleCarritoRepository.deleteAll(detalles);
+        //detalleCarritoRepository.deleteAll(detalles);
 
         return ventaGuardada;
     }

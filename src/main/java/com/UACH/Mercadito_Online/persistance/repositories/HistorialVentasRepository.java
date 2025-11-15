@@ -24,7 +24,7 @@ public interface HistorialVentasRepository extends JpaRepository<HistorialVentas
           AND h.estado = 'COMPLETADA'
     """)
     BigDecimal calcularGananciasPorVendedor(@Param("idUsuario") Long idUsuario);
-     aver si asi si quiere eesta madre*/
+     aver si asi si quiere eesta madre
     @Query("""
     SELECT COALESCE(SUM(d.subtotal), 0)
     FROM HistorialVentasEntity h
@@ -33,6 +33,17 @@ public interface HistorialVentasRepository extends JpaRepository<HistorialVentas
     JOIN d.producto p
     WHERE p.usuario.idUsuario = :idUsuario
     AND h.estado = 'COMPLETADA'
+    """)
+    BigDecimal calcularGananciasPorVendedor(@Param("idUsuario") Long idUsuario);*/
+
+    @Query("""
+    SELECT COALESCE(SUM(d.subtotal), 0)
+    FROM HistorialVentasEntity h
+    JOIN h.carrito c
+    JOIN c.detalleCarrito d
+    JOIN d.producto p
+    WHERE p.usuario.idUsuario = :idUsuario
+      AND c.estado = 'COMPLETADA'
     """)
     BigDecimal calcularGananciasPorVendedor(@Param("idUsuario") Long idUsuario);
 

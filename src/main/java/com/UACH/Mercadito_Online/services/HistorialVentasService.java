@@ -3,6 +3,9 @@ package com.UACH.Mercadito_Online.services;
 
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.UACH.Mercadito_Online.persistance.entities.CarritoEntity;
@@ -17,14 +20,19 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@AllArgsConstructor
+//@AllArgsConstructor
+//@NoArgsConstructor
 @Service
 public class HistorialVentasService {
 
-    private final HistorialVentasRepository historialVentasRepository;
-    private final CarritoRepository carritoRepository;
-    private final DetalleCarritoRepository detalleCarritoRepository;
-    private final ProductosRepository productosRepository;
+    @Autowired
+    private  HistorialVentasRepository historialVentasRepository;
+    @Autowired
+    private  CarritoRepository carritoRepository;
+    @Autowired
+    private  DetalleCarritoRepository detalleCarritoRepository;
+    @Autowired
+    private  ProductosRepository productosRepository;
 
 
     // Listar todas las ventas
@@ -61,6 +69,7 @@ public class HistorialVentasService {
         HistorialVentasEntity venta = new HistorialVentasEntity();
         venta.setCarrito(carrito);
         venta.setFecha(LocalDateTime.now());
+        venta.setUsuario(carrito.getUsuario());
         venta.setTotal(total);
         //venta.setEstado("COMPLETADA");
 
@@ -74,8 +83,8 @@ public class HistorialVentasService {
             productosRepository.save(producto);
         }
 
-        // Vaciar carrito
-        detalleCarritoRepository.deleteAll(detalles);
+        // Vaciar carrito-- esta mal... maybe
+        //detalleCarritoRepository.deleteAll(detalles);
 
         return ventaGuardada;
     }

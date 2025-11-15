@@ -1,6 +1,7 @@
 package com.UACH.Mercadito_Online.services;
 
 
+
 import com.UACH.Mercadito_Online.persistance.entities.UsuariosEntity;
 import com.UACH.Mercadito_Online.persistance.repositories.UsuariosRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,9 @@ public class UsuariosService {
 
     @Autowired
     private UsuariosRepository usuariosRepository;
+
+    @Autowired
+    private CarritoService carritoService;
 
     // Crear usuario nuevo
     public UsuariosEntity crearUsuario(String nombre, String email, String password) {
@@ -33,12 +37,20 @@ public class UsuariosService {
             throw new IllegalArgumentException("Ya existe un usuario con ese correo");
         }
         
+        //se crea el usuario
         UsuariosEntity usuario = new UsuariosEntity();
         usuario.setNombre(nombre);
         usuario.setCorreo(email);
         usuario.setPassword(password);
+        UsuariosEntity usuarioGuardado = usuariosRepository.save(usuario);
 
-        return usuariosRepository.save(usuario);
+        //  Crear y guardar el carrito asociado
+        carritoService.crearCarrito(usuarioGuardado.getIdUsuario());
+        
+        return usuarioGuardado;
+
+        //quiero hacer un carrito asociado al usuario antes de terminar
+        //return usuariosRepository.save(usuario);
     }
 
     // Listar todos los usuarios

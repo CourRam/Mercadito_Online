@@ -42,8 +42,8 @@ public class HistorialVentasEntity {
     private BigDecimal total;
 
     //no tiene sentido;
-    @Column(length = 30, nullable = false)
-    private String estado; //  "COMPLETADA", "CANCELADA", "EN_PROCESO" (maybe creo una lista de estas opciones)
+    //@Column(length = 30, nullable = false)
+    //private String estado; //  "COMPLETADA", "CANCELADA", "EN_PROCESO" (maybe creo una lista de estas opciones)
 
 
 

@@ -18,6 +18,9 @@ public class CarritoService {
     @Autowired
     private UsuariosRepository usuariosRepository;
 
+    @Autowired
+    private HistorialVentasService historialVentasService;
+
     /*
         Crear un nuevo carrito para un usuario.
         Si el usuario ya tiene uno activo, se devuelve el existente.
@@ -29,7 +32,9 @@ public class CarritoService {
         // Verificar si ya tiene un carrito activo
         List<CarritoEntity> carritos = carritoRepository.findByUsuario(usuario);
         if (!carritos.isEmpty()) {
-            return carritos.get(0); // Retorna el primero (único activo)
+            if (carritos.get(0).getEstado()=="EN_PROCESO"){
+                return carritos.get(0); // Retorna el primero (único activo)
+            }   
         }
 
         CarritoEntity carrito = new CarritoEntity();
@@ -39,6 +44,25 @@ public class CarritoService {
         return carritoRepository.save(carrito);
     }
 
+    //La misma que crearCarrito pero con nombre menos confuso
+    public CarritoEntity obtenerCarritoActivo(Long idUsuario){
+        UsuariosEntity usuario = usuariosRepository.findById(idUsuario)
+                .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado"));
+
+        // Verificar si ya tiene un carrito activo
+        List<CarritoEntity> carritos = carritoRepository.findByUsuario(usuario);
+        if (!carritos.isEmpty()) {
+            if (carritos.get(0).getEstado()=="EN_PROCESO"){
+                return carritos.get(0); // Retorna el primero (único activo)
+            }   
+        }
+
+        CarritoEntity carrito = new CarritoEntity();
+        carrito.setUsuario(usuario);
+        carrito.setFechaCreacion(new Date());
+
+        return carritoRepository.save(carrito);
+    }
     
     // Obtener todos los carritos (solo para administración o debug).
     public List<CarritoEntity> listarCarritos() {
@@ -46,6 +70,7 @@ public class CarritoService {
     }
     
     
+
     //Obtener un carrito específico por ID.
     
     public CarritoEntity obtenerPorId(Long idCarrito) {
@@ -65,8 +90,16 @@ public class CarritoService {
 
     
     //Vaciar todos los carritos (solo para pruebas o administración).
-
     public void eliminarTodos() {
         carritoRepository.deleteAll();
     }
+
+    //completar compra
+    public void CompletarCompra(Long idCarrito){
+        CarritoEntity carrito =obtenerPorId(idCarrito);
+        carrito.setEstado("COMPLETADA");
+        historialVentasService.registrarVenta(idCarrito);
+        crearCarrito(carrito.getUsuario().getIdUsuario());
+    }
+
 }

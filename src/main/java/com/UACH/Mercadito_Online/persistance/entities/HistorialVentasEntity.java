@@ -42,17 +42,17 @@ public class HistorialVentasEntity {
     private BigDecimal total;
 
     //no tiene sentido;
-    //@Column(length = 30, nullable = false)
-    //private String estado; //  "COMPLETADA", "CANCELADA", "EN_PROCESO" (maybe creo una lista de estas opciones)
+    @Column(length = 30, nullable = false)
+    private String estado; //  "COMPLETADA", "CANCELADA", "EN_PROCESO" (maybe creo una lista de estas opciones)
 
 
 
-    public HistorialVentasEntity(CarritoEntity carrito, UsuariosEntity usuario, BigDecimal total/* , String estado*/) {
-        this.carrito = carrito;
-        this.usuario = usuario;
-        this.fecha = LocalDateTime.now();
-        this.total = BigDecimal.valueOf(0);
-        //this.estado = estado;
-    }
-    
+    //public HistorialVentasEntity(CarritoEntity carrito, UsuariosEntity usuario, BigDecimal total/* , String estado*/) {
+    //    this.carrito = carrito;
+    //    this.usuario = usuario;
+    //    this.fecha = LocalDateTime.now();
+    //    this.total = BigDecimal.valueOf(0);
+    //    //this.estado = estado;
+    //}
+
 }

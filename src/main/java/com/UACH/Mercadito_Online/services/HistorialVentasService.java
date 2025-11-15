@@ -75,7 +75,7 @@ public class HistorialVentasService {
         }
 
         // Vaciar carrito
-        //detalleCarritoRepository.deleteAll(detalles);
+        detalleCarritoRepository.deleteAll(detalles);
 
         return ventaGuardada;
     }

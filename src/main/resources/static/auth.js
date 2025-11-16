@@ -2,22 +2,23 @@ const API_BASE = "http://localhost:8081/api/usuarios";
 
 //evitar que sucedan errores con el login
 async function validarSesion() {
-    const userId = localStorage.getItem("usuarioId");
+    const user = JSON.parse(localStorage.getItem("usuario") || "{}");
 
     // No hay sesión guardada
-    if (!userId) {
-        mostrarBotonesNoLogeado();
+    if (!user.idUsuario) {
+        localStorage.clear();
+        window.location.href = "login.html";
         return;
     }
 
     // Intentar validar el usuario contra el backend
     try {
-        const resp = await fetch(`${API_BASE}/${userId}`);
+        const resp = await fetch(`${API_BASE}/${user.idUsuario}`);
 
         if (!resp.ok) {
             console.warn("Sesión inválida detectada. Limpiando...");
             localStorage.clear();
-            mostrarBotonesNoLogeado();
+            window.location.href = "login.html";
             return;
         }
 

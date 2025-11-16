@@ -1,3 +1,15 @@
+//Forzar login
+document.addEventListener("DOMContentLoaded", () => {
+    const user = localStorage.getItem("usuario");
+
+    // Si NO es login.html ni registro.html, debe revisar si hay sesión
+    const pagina = window.location.pathname;
+
+    if (!user && !pagina.includes("login") && !pagina.includes("registro")) {
+        window.location.href = "login.html";
+    }
+});
+
 const API_URL_PRODUCTOS = "http://localhost:8081/api/productos/listarDTO";
 const API_URL_CATEGORIAS = "http://localhost:8081/api/categorias/listarDTO";
 
@@ -104,4 +116,58 @@ function agregarAlCarrito(idProducto) {
     carrito.push(idProducto);
     localStorage.setItem("carrito", JSON.stringify(carrito));
     alert("Producto agregado al carrito 🛒");
+}
+
+// Iniciar sesion
+async function login() {
+    const correo = document.getElementById("correo").value;
+    const password = document.getElementById("password").value;
+
+    const resp = await fetch("http://localhost:8081/api/usuarios/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ correo, password })
+    });
+
+    if (!resp.ok) {
+        alert("Correo o contraseña incorrectos");
+        return;
+    }
+
+    const user = await resp.json();
+
+    localStorage.setItem("usuario", JSON.stringify(user));
+    window.location.href = "index.html";
+}
+
+//registrar nuevo usuario
+async function registrar() {
+    const nombre = document.getElementById("nombre").value;
+    const correo = document.getElementById("correo").value;
+    const password = document.getElementById("password").value;
+    const telefono = document.getElementById("telefono").value;
+    const direccion = document.getElementById("direccion").value;
+
+
+
+    const resp = await fetch("http://localhost:8081/api/usuarios/crearFull", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ nombre, correo, password,telefono,direccion })
+    });
+
+    if (!resp.ok) {
+        alert(await resp.text());
+        return;
+    }
+    
+    alert("Cuenta creada. Ahora inicia sesión.");
+    window.location.href = "login.html";
+}
+
+//Cerrar sesion
+function logout() {
+    alert("Cerrando sesión...");
+    localStorage.removeItem("usuario");
+    window.location.href = "login.html";
 }

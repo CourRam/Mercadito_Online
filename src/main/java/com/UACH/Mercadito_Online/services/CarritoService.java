@@ -33,18 +33,17 @@ public class CarritoService {
         List<CarritoEntity> carritos = carritoRepository.findByUsuario(usuario);
         if (!carritos.isEmpty()) {
             if (carritos.get(0).getEstado()=="EN_PROCESO"){
-                return carritos.get(0); // Retorna el primero (único activo)
+                return carritos.get(0); // Retorna el primero que es el mas reciente
             }   
         }
 
-        CarritoEntity carrito = new CarritoEntity();
-        carrito.setUsuario(usuario);
-        carrito.setFechaCreacion(new Date());
+        CarritoEntity carrito = new CarritoEntity(usuario,new Date());
 
         return carritoRepository.save(carrito);
     }
 
-    //La misma que crearCarrito pero con nombre menos confuso
+    //La misma que crearCarrito pero con nombre menos confuso para solo obtener el
+    //carro actual de usuario
     public CarritoEntity obtenerCarritoActivo(Long idUsuario){
         UsuariosEntity usuario = usuariosRepository.findById(idUsuario)
                 .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado"));

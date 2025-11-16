@@ -3,7 +3,11 @@ package com.UACH.Mercadito_Online.controllers;
 import com.UACH.Mercadito_Online.persistance.entities.UsuariosEntity;
 import com.UACH.Mercadito_Online.services.UsuariosService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import com.UACH.Mercadito_Online.DTO.UsuariosDTO;
+
+import java.util.Map;
 import java.util.Optional;
 import java.util.List;
 
@@ -15,7 +19,20 @@ public class UsuariosController {
     @Autowired
     private UsuariosService usuariosService;
 
-    // Crear usuario nuevo
+    
+    // Crear usuario nuevo con todos los datos
+    @PostMapping("/crearFull")
+    public UsuariosEntity crearUsuarioFull(@RequestBody UsuariosDTO dto) {
+        UsuariosEntity usuario=new UsuariosEntity();  
+        usuario.setNombre(dto.getNombre());
+        usuario.setCorreo(dto.getCorreo());
+        usuario.setPassword(dto.getPassword());
+        usuario.setTelefono(dto.getTelefono());
+        usuario.setDireccion(dto.getDireccion());  
+        return usuariosService.crearUsuario(usuario);
+    }
+
+    // Crear usuario nuevo sin todos los datos
     @PostMapping("/crear")
     public UsuariosEntity crearUsuario(
             @RequestParam("nombre") String nombre,
@@ -55,4 +72,36 @@ public class UsuariosController {
         return usuariosService.buscarPorEmail(email);
     }
 
+    // Iniciar sesion
+     @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody Map<String, String> body) {
+        String correo = body.get("correo");
+        String password = body.get("password");
+
+        Optional<UsuariosEntity> usuariosEntityOptional =usuariosService.buscarPorEmail(correo);
+        UsuariosEntity u=usuariosEntityOptional.get();
+
+        if (u == null || !u.getPassword().equals(password)) {
+            return ResponseEntity.status(401).body("Credenciales incorrectas");
+        }
+
+        return ResponseEntity.ok(Map.of(
+                "idUsuario", u.getIdUsuario(),
+                "nombre", u.getNombre(),
+                "correo", u.getCorreo()
+        ));
+    }
+
+
+    @PostMapping("/registro")
+    public ResponseEntity<?> registro(@RequestBody UsuariosEntity nuevo) {
+        
+        if (usuariosService.buscarPorEmail(nuevo.getCorreo()).isPresent()) {
+            return ResponseEntity.badRequest().body("Correo ya registrado");
+        }
+        
+        usuariosService.crearUsuario(nuevo);
+
+        return ResponseEntity.ok("Usuario registrado");
+    }
 }

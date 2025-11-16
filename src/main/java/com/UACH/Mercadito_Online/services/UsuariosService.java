@@ -19,7 +19,35 @@ public class UsuariosService {
     @Autowired
     private CarritoService carritoService;
 
-    // Crear usuario nuevo
+    //Crear usuario con todos los argumentos
+    public UsuariosEntity crearUsuario(UsuariosEntity usuario) {
+        if (usuario.getNombre() == null || usuario.getNombre().isBlank()) {
+            throw new IllegalArgumentException("El nombre es obligatorio");
+        }
+        if (usuario.getCorreo() == null || usuario.getCorreo().isBlank()) {
+            throw new IllegalArgumentException("El email es obligatorio");
+        }
+        if (usuario.getPassword() == null || usuario.getPassword().isBlank()) {
+            throw new IllegalArgumentException("La contraseña es obligatoria");
+        }
+
+        // Verificar si ya existe un usuario con ese correo
+        if (usuariosRepository.findAll().stream()
+                .anyMatch(u -> u.getCorreo().equalsIgnoreCase(usuario.getCorreo()))) {
+            throw new IllegalArgumentException("Ya existe un usuario con ese correo");
+        }
+        //Guardar Usuario
+        UsuariosEntity usuarioGuardado = usuariosRepository.save(usuario);
+
+        //  Crear y guardar el carrito asociado
+        carritoService.crearCarrito(usuarioGuardado.getIdUsuario());
+        
+        return usuarioGuardado;
+    }
+
+
+
+    // Crear usuario nuevo con datos limitados,Para pruebas
     public UsuariosEntity crearUsuario(String nombre, String email, String password) {
         if (nombre == null || nombre.isBlank()) {
             throw new IllegalArgumentException("El nombre es obligatorio");
@@ -48,9 +76,6 @@ public class UsuariosService {
         carritoService.crearCarrito(usuarioGuardado.getIdUsuario());
         
         return usuarioGuardado;
-
-        //quiero hacer un carrito asociado al usuario antes de terminar
-        //return usuariosRepository.save(usuario);
     }
 
     // Listar todos los usuarios

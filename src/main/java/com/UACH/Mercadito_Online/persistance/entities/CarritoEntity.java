@@ -28,7 +28,7 @@ public class CarritoEntity {
     private List<DetalleCarritoEntity> detalleCarrito;
 
     @Column(length = 30, nullable = false)
-    private String estado; //  "COMPLETADA", "CANCELADA", "EN_PROCESO" (maybe creo una lista de estas opciones)
+    private String estado="EN_PROCESO"; //  "COMPLETADA", "CANCELADA", "EN_PROCESO" (maybe creo una lista de estas opciones)
 
     public CarritoEntity(Long idCarrito, Date fechaCreacion, UsuariosEntity usuario, List<DetalleCarritoEntity> detalleCarrito) {
     this.idCarrito = idCarrito;
@@ -36,7 +36,13 @@ public class CarritoEntity {
     this.usuario = usuario;
     this.detalleCarrito = detalleCarrito;
     this.estado="EN_PROCESO";
-}
+    }
+
+    public CarritoEntity( UsuariosEntity usuario,Date fechaCreacion) {
+    this.fechaCreacion = fechaCreacion;
+    this.usuario = usuario;
+    this.estado="EN_PROCESO";
+    }
 
 
     

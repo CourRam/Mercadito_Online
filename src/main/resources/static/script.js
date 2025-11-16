@@ -1,4 +1,5 @@
-//Forzar login
+//Se cambio responsabilidad a auth.js
+/*Forzar login---- 
 document.addEventListener("DOMContentLoaded", () => {
     const user = localStorage.getItem("usuario");
 
@@ -8,7 +9,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!user && !pagina.includes("login") && !pagina.includes("registro")) {
         window.location.href = "login.html";
     }
-});
+});*/
 
 const API_URL_PRODUCTOS = "http://localhost:8081/api/productos/listarDTO";
 const API_URL_CATEGORIAS = "http://localhost:8081/api/categorias/listarDTO";

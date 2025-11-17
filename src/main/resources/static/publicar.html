@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mercadito Online</title>
+    <link rel="stylesheet" href="style-publ.css">
+</head>
+<body>
+    <script src="auth.js"></script>
+    <script>validarSesion();</script>
+    <header>
+         <a href="index.html" style="text-decoration: none; color: white;" >
+        <h1>🛒 Mercadito Online</h1></a>
+        <nav>
+            <button onclick="window.location.href='perfil.html'">👤​ Ver Perfil</button>
+            <button onclick="window.location.href='carrito.html'">🛍️ Ver Carrito</button>
+            <button onclick="window.location.href='publicar.html'">📦 Publicar Producto</button>
+            <button onclick="logout()">❌ Cerrar Sesión</button>
+        </nav>
+    </header>
+
+    <main>
+        <div class="publ-container">
+
+            <h2>Publicar un Producto</h2>
+
+            <form id="formPublicar">
+                <br/>
+                <input type="text" id="nombre" placeholder="Nombre del producto" required>
+                <br/><br/>
+                <textarea id="descripcion" placeholder="Descripción" rows="4" required></textarea>
+                <br/><br/>
+                <input type="number" id="precio" placeholder="Precio" required>
+                <br/><br/>
+                <input type="number" id="stock" placeholder="Stock" required>
+                <br/><br/>
+                <select id="categoria" required></select>
+                <br/><br/>
+                <input type="file" id="imagen" accept="image/*" required>
+                <br/><br/>
+                <button type="submit">Publicar</button>
+            </form>
+
+    </div>
+    
+    </main>
+
+    <footer>
+        <p>2025 ©Mercadito Online</p>
+    </footer>
+
+    <script src="script.js"></script>
+    <script src="script-publicar.js"></script>
+</body>
+</html>

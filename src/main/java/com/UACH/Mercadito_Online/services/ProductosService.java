@@ -100,7 +100,8 @@ public class ProductosService {
                 p.getPrecio(),
                 p.getImagenUrl(),
                 p.getCategoria() != null ? p.getCategoria().getIdCategoria() : null,
-                p.getUsuario() != null ? p.getUsuario().getIdUsuario() : null
+                p.getUsuario() != null ? p.getUsuario().getIdUsuario() : null,
+                p.getStock()
             ))
             .toList();
     }

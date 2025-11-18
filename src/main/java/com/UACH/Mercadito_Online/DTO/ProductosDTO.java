@@ -17,4 +17,5 @@ public class ProductosDTO {
     private String imagenUrl;
     private Long categoriaId;
     private Long vendedorId;
+    private Integer stock;
 }

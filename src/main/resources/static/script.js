@@ -72,9 +72,10 @@ function mostrarProductos(productos) {
     contenedor.innerHTML = "";
 
     productos.forEach(prod => {
-        const card = document.createElement("div");
-        card.className = "product-card";
-        card.innerHTML = `
+        if(prod.stock>0){
+            const card = document.createElement("div");
+            card.className = "product-card";
+            card.innerHTML = `
             <img src="${prod.imagenUrl || 'https://via.placeholder.com/250x180?text=Sin+Imagen'}" alt="${prod.nombre}">
             <div class="info">
                 <h3>${prod.nombre}</h3>
@@ -83,7 +84,9 @@ function mostrarProductos(productos) {
                 <button onclick="agregarAlCarrito(${prod.idProducto})">Agregar al carrito</button>
             </div>
         `;
-        contenedor.appendChild(card);
+            contenedor.appendChild(card);
+        }
+        
     });
 }
 
@@ -110,6 +113,8 @@ function filtrarProductos() {
 
     mostrarProductos(filtrados);
 }
+
+
 
 //  Agregar producto al carrito
 function agregarAlCarrito(idProducto) {

@@ -34,6 +34,10 @@ form.addEventListener("submit", async (e) => {
     
     if (!usuario.idUsuario) return alert("Sesión expirada.");
 
+    if (document.getElementById("stock").value<1) return alert("No puedes publicar Productos sin stock");
+
+    if(document.getElementById("precio").value<=0) return alert("Favor de poner un precio");
+
     const data = new FormData();
     data.append("nombre", document.getElementById("nombre").value);
     data.append("descripcion", document.getElementById("descripcion").value);

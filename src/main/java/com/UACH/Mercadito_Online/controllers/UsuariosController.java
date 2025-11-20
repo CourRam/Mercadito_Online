@@ -78,9 +78,21 @@ public class UsuariosController {
         String correo = body.get("correo");
         String password = body.get("password");
 
+        /* 
         Optional<UsuariosEntity> usuariosEntityOptional =usuariosService.buscarPorEmail(correo);
         UsuariosEntity u=usuariosEntityOptional.get();
+        */
+        Optional<UsuariosEntity> opt = usuariosService.buscarPorEmail(correo);
+        if (opt.isEmpty()) {
+            return ResponseEntity.status(401).body("Credenciales incorrectas");
+        }
 
+        UsuariosEntity u = opt.get();
+
+        if (!u.getPassword().equals(password)) {
+            return ResponseEntity.status(401).body("Credenciales incorrectas");
+        }
+        
         if (u == null || !u.getPassword().equals(password)) {
             return ResponseEntity.status(401).body("Credenciales incorrectas");
         }

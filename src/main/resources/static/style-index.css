@@ -17,6 +17,7 @@ html,body {
   background-color: #f4f6f8;
   color: #333;
 }
+
 body{
     overflow-x: hidden;
 }
@@ -180,10 +181,10 @@ footer {
     color: white;
     font-size: 0.9rem;
     margin-top: 20px;
-    /*esto es para que este abajo el footer de forma absoluta*/
+    /*esto es para que este abajo el footer de forma absoluta
     position: absolute;
     bottom: 0;
     left: 0;           
-    width: 100%;
+    width: 100%;*/
 
 }

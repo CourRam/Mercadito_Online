@@ -25,6 +25,12 @@ public class CarritoController {
         return ResponseEntity.ok(carrito);
     }
 
+    //Obtener carrito actual
+    @PostMapping("/carrito-actual")
+    public ResponseEntity<CarritoEntity> obtenerCarritoActivo(@RequestParam Long idUsuario) {
+        CarritoEntity carrito = carritoService.obtenerCarritoActivo(idUsuario);
+        return ResponseEntity.ok(carrito);
+    }
     
     //Obtener todos los carritos.
     

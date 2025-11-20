@@ -22,9 +22,9 @@ public class DetalleCarritoController {
     @PostMapping("/{idCarrito}/agregar")
     public ResponseEntity<DetalleCarritoEntity> agregarProducto(
             @PathVariable Long idCarrito,
-            @RequestParam Long idProducto,
-            @RequestParam Integer cantidad) {
-        DetalleCarritoEntity detalle = detalleCarritoService.agregarProducto(idCarrito, idProducto, cantidad);
+            @RequestParam Long idProducto/* ,
+            @RequestParam Integer cantidad*/) {
+        DetalleCarritoEntity detalle = detalleCarritoService.agregarProducto(idCarrito, idProducto, 1);
         return ResponseEntity.ok(detalle);
     }
 

@@ -114,15 +114,50 @@ function filtrarProductos() {
     mostrarProductos(filtrados);
 }
 
+async function agregarAlCarrito(idProducto) {
+    try {
+        const user = JSON.parse(localStorage.getItem("usuario"));
+        if (!user || !user.idUsuario) {
+            alert("Debes iniciar sesión para agregar productos.");
+            return;
+        }
 
+        console.log("Solicitando carrito actual...");
 
-//  Agregar producto al carrito
-function agregarAlCarrito(idProducto) {
-    let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
-    carrito.push(idProducto);
-    localStorage.setItem("carrito", JSON.stringify(carrito));
-    alert("Producto agregado al carrito 🛒");
+        
+        const respCarrito = await fetch(`http://localhost:8081/api/carritos/carrito-actual?idUsuario=${user.idUsuario}`, {
+            method: "POST"
+        });
+
+        if (!respCarrito.ok) throw new Error("No se pudo obtener el carrito actual");
+
+        const carrito = await respCarrito.json();
+        console.log("Carrito obtenido:", carrito);
+
+        
+        console.log("Agregando producto al carrito...");
+
+        const respDetalle = await fetch(`http://localhost:8081/api/detalle-carrito/${carrito.idCarrito}/agregar?idProducto=${idProducto}`, {
+            method: "POST"
+        });
+
+        if (!respDetalle.ok) throw new Error("Error al agregar producto");
+
+        console.log("Producto agregado exitosamente");
+
+        alert("Producto agregado al carrito 🛒");
+
+        location.reload();
+
+    } catch (error) {
+        console.error("Error al agregar al carrito:", error);
+        alert("No se pudo agregar al carrito: " + error.message);
+    }
 }
+
+
+
+
 
 // Iniciar sesion
 async function login() {

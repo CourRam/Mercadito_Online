@@ -26,7 +26,7 @@ public class DetalleCarritoService {
     private ProductosRepository productosRepository;
 
     // Agregar producto al carrito
-    public DetalleCarritoEntity agregarProducto(Long idCarrito, Long idProducto, Integer cantidad) {
+    public DetalleCarritoEntity agregarProducto(Long idCarrito, Long idProducto , Integer cantidad) {
         if (cantidad == null || cantidad <= 0) {
             throw new IllegalArgumentException("La cantidad debe ser mayor a 0");
         }
@@ -40,6 +40,10 @@ public class DetalleCarritoService {
         if (producto.getStock() < cantidad) {
             throw new IllegalArgumentException("Stock insuficiente para este producto");
         }
+        //falta agregar que compruebe stock en funcion del carrito acto activo
+        //de modo que reste el stock producto.getStock() la cantidad de ese producto
+        //actualmente en el carrito
+
 
         DetalleCarritoID id = new DetalleCarritoID(idCarrito, idProducto);
         DetalleCarritoEntity detalle = detalleCarritoRepository.findById(id).orElse(null);

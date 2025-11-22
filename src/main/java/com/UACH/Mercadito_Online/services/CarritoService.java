@@ -21,65 +21,56 @@ public class CarritoService {
     @Autowired
     private HistorialVentasService historialVentasService;
 
-    /*
-        Crear un nuevo carrito para un usuario.
-        Si el usuario ya tiene uno activo, se devuelve el existente.
-    */
     public CarritoEntity crearCarrito(Long idUsuario) {
+
         UsuariosEntity usuario = usuariosRepository.findById(idUsuario)
                 .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado"));
 
-        // Verificar si ya tiene un carrito activo
-        List<CarritoEntity> carritos = carritoRepository.findByUsuario(usuario);
+        List<CarritoEntity> carritos = carritoRepository
+                .findByUsuarioOrderByFechaCreacionDesc(usuario);
+
         if (!carritos.isEmpty()) {
-            if (carritos.get(0).getEstado()=="EN_PROCESO"){
-                return carritos.get(0); // Retorna el primero que es el mas reciente
-            }   
+            CarritoEntity carrito = carritos.get(0);
+
+            if ("EN_PROCESO".equals(carrito.getEstado())) {
+                return carrito;
+            }
         }
 
-        CarritoEntity carrito = new CarritoEntity(usuario,new Date());
-
-        return carritoRepository.save(carrito);
+        CarritoEntity nuevo = new CarritoEntity(usuario, new Date());
+        return carritoRepository.save(nuevo);
     }
 
-    //La misma que crearCarrito pero con nombre menos confuso para solo obtener el
-    //carro actual de usuario
-    public CarritoEntity obtenerCarritoActivo(Long idUsuario){
+
+    public CarritoEntity obtenerCarritoActivo(Long idUsuario) {
+
         UsuariosEntity usuario = usuariosRepository.findById(idUsuario)
                 .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado"));
 
-        // Verificar si ya tiene un carrito activo
-        List<CarritoEntity> carritos = carritoRepository.findByUsuario(usuario);
+        List<CarritoEntity> carritos = carritoRepository
+                .findByUsuarioOrderByFechaCreacionDesc(usuario);
+
         if (!carritos.isEmpty()) {
-            if (carritos.get(0).getEstado()=="EN_PROCESO"){
-                return carritos.get(0); // Retorna el primero (único activo)
-            }   
+            CarritoEntity carrito = carritos.get(0);
+
+            if ("EN_PROCESO".equals(carrito.getEstado())) {
+                return carrito;
+            }
         }
 
-        CarritoEntity carrito = new CarritoEntity();
-        carrito.setUsuario(usuario);
-        carrito.setFechaCreacion(new Date());
-
-        return carritoRepository.save(carrito);
+        CarritoEntity nuevo = new CarritoEntity(usuario, new Date());
+        return carritoRepository.save(nuevo);
     }
-    
-    // Obtener todos los carritos (solo para administración o debug).
+
     public List<CarritoEntity> listarCarritos() {
         return carritoRepository.findAll();
     }
-    
-    
 
-    //Obtener un carrito específico por ID.
-    
     public CarritoEntity obtenerPorId(Long idCarrito) {
         return carritoRepository.findById(idCarrito)
                 .orElseThrow(() -> new IllegalArgumentException("Carrito no encontrado"));
     }
 
-    
-    //Eliminar un carrito específico.
-    
     public void eliminarCarrito(Long idCarrito) {
         if (!carritoRepository.existsById(idCarrito)) {
             throw new IllegalArgumentException("Carrito no encontrado");
@@ -87,18 +78,14 @@ public class CarritoService {
         carritoRepository.deleteById(idCarrito);
     }
 
-    
-    //Vaciar todos los carritos (solo para pruebas o administración).
     public void eliminarTodos() {
         carritoRepository.deleteAll();
     }
 
-    //completar compra
     public void CompletarCompra(Long idCarrito){
-        CarritoEntity carrito =obtenerPorId(idCarrito);
+        CarritoEntity carrito = obtenerPorId(idCarrito);
         carrito.setEstado("COMPLETADA");
         historialVentasService.registrarVenta(idCarrito);
         crearCarrito(carrito.getUsuario().getIdUsuario());
     }
-
 }

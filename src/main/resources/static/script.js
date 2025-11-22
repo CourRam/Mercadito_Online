@@ -1,22 +1,9 @@
-//Se cambio responsabilidad a auth.js
-/*Forzar login---- 
-document.addEventListener("DOMContentLoaded", () => {
-    const user = localStorage.getItem("usuario");
-
-    // Si NO es login.html ni registro.html, debe revisar si hay sesión
-    const pagina = window.location.pathname;
-
-    if (!user && !pagina.includes("login") && !pagina.includes("registro")) {
-        window.location.href = "login.html";
-    }
-});*/
-
 const API_URL_PRODUCTOS = "http://localhost:8081/api/productos/listarDTO";
 const API_URL_CATEGORIAS = "http://localhost:8081/api/categorias/listarDTO";
 
 let productosGlobal = [];
 let categoriasGlobal = [];
-
+let detallesCache = null;
 // Cargar productos y categorías al inicio
 document.addEventListener("DOMContentLoaded", async () => {
     await Promise.all([cargarCategorias(), cargarProductos()]);
@@ -33,6 +20,8 @@ async function cargarProductos() {
         const productos = await response.json();
         productosGlobal = productos;
 
+        //ponemos el detallesCache en nulo para que se refreque correctamente
+        detallesCache = null;
         mostrarProductos(productos);
     } catch (error) {
         contenedor.innerHTML = `<p>Error al cargar productos: ${error.message}</p>`;
@@ -60,8 +49,8 @@ async function cargarCategorias() {
     }
 }
 
-// Mostrar productos
-function mostrarProductos(productos) {
+// Mostrar productos(VIEJO, NO TIENE ASYNC)
+function mostrarProductosViejo(productos) {
     const contenedor = document.getElementById("productos-container");
 
     if (productos.length === 0) {
@@ -72,7 +61,8 @@ function mostrarProductos(productos) {
     contenedor.innerHTML = "";
 
     productos.forEach(prod => {
-        if(prod.stock>0){
+        let cantidadCarrito=contarStockProducto(prod.idProducto);
+        if((prod.stock-cantidadCarrito)>0){
             const card = document.createElement("div");
             card.className = "product-card";
             card.innerHTML = `
@@ -87,6 +77,34 @@ function mostrarProductos(productos) {
             contenedor.appendChild(card);
         }
         
+    });
+}
+// Mostrar productos
+async function mostrarProductos(productos) {
+    const contenedor = document.getElementById("productos-container");
+    contenedor.innerHTML = "";
+
+    const cantidades = await Promise.all(
+        productos.map(p => contarStockProducto(p.idProducto))
+    );
+
+    productos.forEach((prod, index) => {
+        const cantidadCarrito = cantidades[index];
+
+        if (prod.stock - cantidadCarrito > 0) {
+            const card = document.createElement("div");
+            card.className = "product-card";
+            card.innerHTML = `
+                <img src="${prod.imagenUrl || 'https://via.placeholder.com/250x180?text=Sin+Imagen'}" alt="${prod.nombre}">
+                <div class="info">
+                    <h3>${prod.nombre}</h3>
+                    <p>${prod.descripcion || 'Sin descripción'}</p>
+                    <p class="price">$${prod.precio.toFixed(2)}</p>
+                    <button onclick="agregarAlCarrito(${prod.idProducto})">Agregar al carrito</button>
+                </div>
+            `;
+            contenedor.appendChild(card);
+        }
     });
 }
 
@@ -113,6 +131,31 @@ function filtrarProductos() {
 
     mostrarProductos(filtrados);
 }
+//Para tener los detalles del carrito 
+async function obtenerDetallesCarrito() {
+    if (detallesCache) return detallesCache;
+
+    const user = JSON.parse(localStorage.getItem("usuario"));
+    if (!user) return [];
+
+    const respCarrito = await fetch(`http://localhost:8081/api/carritos/carrito-actual?idUsuario=${user.idUsuario}`);
+    if (!respCarrito.ok) return [];
+
+    const carrito = await respCarrito.json();
+
+    const respDetalle = await fetch(`http://localhost:8081/api/detalle-carrito/${carrito.idCarrito}`);
+    if (!respDetalle.ok) return [];
+
+    detallesCache = await respDetalle.json();
+    return detallesCache;
+}
+
+async function contarStockProducto(idProducto) {
+    const detalles = await obtenerDetallesCarrito();
+    return detalles
+        .filter(d => d.producto && d.producto.idProducto === idProducto)
+        .reduce((acc, d) => acc + d.cantidad, 0);
+}
 
 async function agregarAlCarrito(idProducto) {
     try {
@@ -134,6 +177,11 @@ async function agregarAlCarrito(idProducto) {
         const carrito = await respCarrito.json();
         console.log("Carrito obtenido:", carrito);
 
+        console.log("Carrito obtenido:", carrito);
+        if (!carrito || !carrito.idCarrito) {
+            alert("El backend no devolvió un carrito válido");
+            return;
+        }
         
         console.log("Agregando producto al carrito...");
 
@@ -141,7 +189,13 @@ async function agregarAlCarrito(idProducto) {
             method: "POST"
         });
 
-        if (!respDetalle.ok) throw new Error("Error al agregar producto");
+        //if (!respDetalle.ok) throw new Error("Error al agregar producto");
+
+        if (!respDetalle.ok) {
+            const txt = await respDetalle.text();
+            throw new Error("Error al agregar producto: " + txt);
+        }
+
 
         console.log("Producto agregado exitosamente");
 
@@ -154,6 +208,7 @@ async function agregarAlCarrito(idProducto) {
         alert("No se pudo agregar al carrito: " + error.message);
     }
 }
+
 
 
 

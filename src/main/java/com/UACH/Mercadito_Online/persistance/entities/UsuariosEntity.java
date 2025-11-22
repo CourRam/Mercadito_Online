@@ -1,12 +1,11 @@
 package com.UACH.Mercadito_Online.persistance.entities;
 
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-//import java.util.List;
-
+import java.util.List;
 
 @Entity
 @Data
@@ -15,7 +14,6 @@ import lombok.NoArgsConstructor;
 @Table(name = "Usuarios")
 public class UsuariosEntity {
 
-    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idUsuario;
@@ -35,8 +33,8 @@ public class UsuariosEntity {
     @Column(length = 255)
     private String direccion;
 
-    // Relación con productos (un usuario puede publicar varios productos)
-    //@OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
-    //private List<ProductosEntity> productos;
-
+    // 🔥 Evita ciclo Usuario → Carritos → Usuario → ...
+    @OneToMany(mappedBy = "usuario")
+    @JsonIgnore
+    private List<CarritoEntity> carritos;
 }

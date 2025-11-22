@@ -1,34 +1,34 @@
 package com.UACH.Mercadito_Online.persistance.entities;
 
-
-import java.math.BigDecimal;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "DetalleCarrito")
+@Table(name = "detalle_carrito")
 public class DetalleCarritoEntity {
 
-    @EmbeddedId
-    private DetalleCarritoID id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long idDetalleCarrito;
 
-    private Integer cantidad;
-
-    @ManyToOne
-    @MapsId("idCarrito")
-    @JoinColumn(name = "id_carrito")
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "id_carrito", nullable = false)
     private CarritoEntity carrito;
 
-    @ManyToOne
-    @MapsId("idProducto")
-    @JoinColumn(name = "id_producto")
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "id_producto", nullable = false)
     private ProductosEntity producto;
 
-    @Column(precision = 10, scale = 2)
-    private BigDecimal subtotal;
+    @Column(nullable = false)
+    private Integer cantidad;
+
+    @Column(precision = 10, scale = 2, nullable = false)
+    private BigDecimal subtotal = BigDecimal.ZERO;
 }

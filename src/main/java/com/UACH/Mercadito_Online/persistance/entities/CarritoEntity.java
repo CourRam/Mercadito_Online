@@ -23,13 +23,13 @@ public class CarritoEntity {
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaCreacion = new Date();
 
-    // 🔥 Evita ciclo: Usuario → Carritos → Usuario → ...
+    //Evita ciclo: Usuario → Carritos → Usuario → ...
     @ManyToOne
     @JoinColumn(name = "id_usuario")
     @JsonBackReference(value = "usuario-carritos")
     private UsuariosEntity usuario;
 
-    // 🔥 Evita ciclo: Carrito → Detalles → Carrito → ...
+    //Evita ciclo: Carrito → Detalles → Carrito → ...
     @OneToMany(mappedBy = "carrito", cascade = CascadeType.ALL)
     @JsonManagedReference(value = "carrito-detalles")
     private List<DetalleCarritoEntity> detalleCarrito;

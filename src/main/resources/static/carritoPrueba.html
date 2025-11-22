@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mi Carrito - Mercadito Online</title>
+
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background: #f0f2f5;
+        margin: 0;
+        padding: 0;
+      }
+
+      header {
+        background: #1877f2;
+        padding: 15px;
+        color: white;
+        font-size: 22px;
+        font-weight: bold;
+      }
+
+      .container {
+        width: 90%;
+        max-width: 900px;
+        margin: 25px auto;
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      .item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid #ddd;
+        padding: 15px 0;
+      }
+
+      .item:last-child {
+        border-bottom: none;
+      }
+
+      .name {
+        font-size: 18px;
+        font-weight: bold;
+      }
+
+      .controls {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      button {
+        border: none;
+        padding: 7px 12px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 15px;
+      }
+
+      .btn-add {
+        background: #1877f2;
+        color: white;
+      }
+      .btn-sub {
+        background: #999;
+        color: white;
+      }
+      .btn-delete {
+        background: #e53935;
+        color: white;
+      }
+
+      .total-box {
+        margin-top: 20px;
+        font-size: 22px;
+        font-weight: bold;
+        text-align: right;
+      }
+
+      .actions {
+        margin-top: 25px;
+        display: flex;
+        justify-content: flex-end;
+        gap: 20px;
+      }
+
+      .btn-finalizar {
+        background: #43a047;
+        color: white;
+        padding: 12px 18px;
+        font-size: 17px;
+      }
+
+      .btn-cancelar {
+        background: #e53935;
+        color: white;
+        padding: 12px 18px;
+        font-size: 17px;
+      }
+    </style>
+  </head>
+  <body>
+    <header>🛒 Mi Carrito</header>
+
+    <div class="container">
+      <div id="items"></div>
+
+      <div id="total" class="total-box">Total: $0.00</div>
+
+      <div class="actions">
+        <button class="btn-cancelar" onclick="cancelarCompra()">
+          Cancelar
+        </button>
+        <button class="btn-finalizar" onclick="finalizarCompra()">
+          Finalizar Compra
+        </button>
+      </div>
+    </div>
+
+    <script>
+      const API_CARRITO = "http://localhost:8081/api/carritos/carrito-actual";
+      const API_DETALLE = "http://localhost:8081/api/detalle-carrito";
+
+      let carrito = null;
+      const usuario = JSON.parse(localStorage.getItem("usuario") || "{}");
+
+      if (!usuario.idUsuario) {
+        alert("⚠ No hay sesión iniciada.");
+        window.location.href = "index.html";
+      }
+
+      // ===============================
+      //   Cargar carrito al iniciar
+      // ===============================
+      async function cargarCarrito() {
+        try {
+          const res = await fetch(
+            `${API_CARRITO}?idUsuario=${usuario.idUsuario}`,
+            { method: "POST" }
+          );
+          /*const res = await fetch(API_CARRITO, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ idUsuario: usuario.idUsuario })
+            });*/
+
+          if (!res.ok) throw new Error("Error al obtener el carrito");
+          carrito = await res.json();
+          renderCarrito();
+        } catch (error) {
+          alert("No se pudo cargar el carrito: " + error.message);
+        }
+      }
+
+      // ===============================
+      //     Mostrar productos
+      // ===============================
+      function renderCarrito() {
+        const cont = document.getElementById("items");
+        cont.innerHTML = "";
+
+        carrito.detalles.forEach((det) => {
+          cont.innerHTML += `
+                <div class="item">
+                    <div>
+                        <div class="name">${
+                          det.nombreProducto ?? "Producto"
+                        }</div>
+                        <small>Precio: $${det.subtotal / det.cantidad}</small>
+                    </div>
+
+                    <div class="controls">
+                        <button class="btn-sub" onclick="cambiarCantidad(${
+                          det.idProducto
+                        }, ${det.cantidad - 1})">-</button>
+                        <span>${det.cantidad}</span>
+                        <button class="btn-add" onclick="cambiarCantidad(${
+                          det.idProducto
+                        }, ${det.cantidad + 1})">+</button>
+                        <button class="btn-delete" onclick="eliminar(${
+                          det.idProducto
+                        })">🗑</button>
+                    </div>
+                </div>
+            `;
+        });
+
+        document.getElementById("total").innerText = "Total: $" + carrito.total;
+      }
+
+      // ===============================
+      //   Cambiar cantidad (+ / -)
+      // ===============================
+      async function cambiarCantidad(idProducto, nuevaCantidad) {
+        if (nuevaCantidad <= 0) return eliminar(idProducto);
+
+        await fetch(
+          `${API_DETALLE}/${carrito.idCarrito}/actualizar?idProducto=${idProducto}&nuevaCantidad=${nuevaCantidad}`,
+          {
+            method: "PUT",
+          }
+        );
+
+        cargarCarrito();
+      }
+
+      // ===============================
+      //   Eliminar producto
+      // ===============================
+      async function eliminar(idProducto) {
+        await fetch(
+          `${API_DETALLE}/${carrito.idCarrito}/eliminar?idProducto=${idProducto}`,
+          {
+            method: "DELETE",
+          }
+        );
+
+        cargarCarrito();
+      }
+
+      // ===============================
+      //   Finalizar compra
+      // ===============================
+      async function finalizarCompra() {
+        alert("Compra finalizada (pendiente implementar en backend)");
+      }
+
+      // ===============================
+      //   Cancelar compra
+      // ===============================
+      async function cancelarCompra() {
+        await fetch(`${API_DETALLE}/${carrito.idCarrito}/vaciar`, {
+          method: "DELETE",
+        });
+
+        alert("Carrito cancelado.");
+        cargarCarrito();
+      }
+
+      cargarCarrito();
+    </script>
+  </body>
+</html>

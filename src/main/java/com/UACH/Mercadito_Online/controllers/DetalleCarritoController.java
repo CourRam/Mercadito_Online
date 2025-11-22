@@ -19,6 +19,9 @@ public class DetalleCarritoController {
     @Autowired
     private DetalleCarritoService detalleCarritoService;
 
+    @Autowired
+    private DetalleCarritoMapper detalleCarritoMapper;
+
     // Agregar un producto al carrito — devuelve DetalleCarritoDTO
     @PostMapping("/{idCarrito}/agregar")
     public ResponseEntity<?> agregarProducto(
@@ -26,7 +29,7 @@ public class DetalleCarritoController {
             @RequestParam Long idProducto) {
         try {
             DetalleCarritoEntity detalleEnt = detalleCarritoService.agregarProducto(idCarrito, idProducto, 1);
-            DetalleCarritoDTO dto = DetalleCarritoMapper.toDTO(detalleEnt);
+            DetalleCarritoDTO dto = detalleCarritoMapper.toDTO(detalleEnt);
             return ResponseEntity.ok(dto);
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -38,7 +41,7 @@ public class DetalleCarritoController {
     public ResponseEntity<List<DetalleCarritoDTO>> listarPorCarrito(@PathVariable Long idCarrito) {
         List<DetalleCarritoEntity> detalles = detalleCarritoService.listarPorCarrito(idCarrito);
         List<DetalleCarritoDTO> dtos = detalles.stream()
-                .map(DetalleCarritoMapper::toDTO)
+                .map(detalleCarritoMapper::toDTO)
                 .collect(Collectors.toList());
         return ResponseEntity.ok(dtos);
     }
@@ -51,7 +54,7 @@ public class DetalleCarritoController {
             @RequestParam Integer nuevaCantidad) {
         try {
             DetalleCarritoEntity actualizado = detalleCarritoService.actualizarCantidad(idCarrito, idProducto, nuevaCantidad);
-            DetalleCarritoDTO dto = DetalleCarritoMapper.toDTO(actualizado);
+            DetalleCarritoDTO dto = detalleCarritoMapper.toDTO(actualizado);
             return ResponseEntity.ok(dto);
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());

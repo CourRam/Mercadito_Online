@@ -18,18 +18,21 @@ public class CarritoController {
     @Autowired
     private CarritoService carritoService;
 
+    @Autowired
+    private CarritoMapper carritoMapper;
+
     // Crear un nuevo carrito para un usuario.
     @PostMapping("/crear")
     public ResponseEntity<CarritoDTO> crearCarrito(@RequestParam Long idUsuario) {
         CarritoEntity carrito = carritoService.crearCarrito(idUsuario);
-        return ResponseEntity.ok(CarritoMapper.toDTO(carrito));
+        return ResponseEntity.ok(carritoMapper.toDTO(carrito));
     }
 
     // Obtener carrito actual (ahora devuelve DTO con detalles y total)
     @PostMapping("/carrito-actual")
     public ResponseEntity<CarritoDTO> obtenerCarritoActivo(@RequestParam Long idUsuario) {
         CarritoEntity carrito = carritoService.obtenerCarritoActivo(idUsuario);
-        return ResponseEntity.ok(CarritoMapper.toDTO(carrito));
+        return ResponseEntity.ok(carritoMapper.toDTO(carrito));
     }
 
     // Obtener todos los carritos (admin/debug) - devuelve entidades (opcional)
@@ -43,7 +46,7 @@ public class CarritoController {
     @GetMapping("/{idCarrito}")
     public ResponseEntity<CarritoDTO> obtenerPorId(@PathVariable Long idCarrito) {
         CarritoEntity carrito = carritoService.obtenerPorId(idCarrito);
-        return ResponseEntity.ok(CarritoMapper.toDTO(carrito));
+        return ResponseEntity.ok(carritoMapper.toDTO(carrito));
     }
 
     // Eliminar un carrito por ID.

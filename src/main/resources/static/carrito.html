@@ -15,7 +15,7 @@
         <h1>🛒 Mercadito Online</h1></a>
         <nav>
             <button onclick="window.location.href='perfil.html'">👤​ Ver Perfil</button>
-            <button onclick="window.location.href='carritoPrueba.html'">🛍️ Ver Carrito</button>
+            <button onclick="window.location.href='carrito.html'">🛍️ Ver Carrito</button>
             <button onclick="window.location.href='publicar.html'">📦 Publicar Producto</button>
             <button onclick="logout()">❌ Cerrar Sesión</button>
         </nav>
@@ -23,30 +23,27 @@
 
     <main>
     
-    <section id="filtros" class="filtros">
-        <input type="text" id="input-busqueda" placeholder="Buscar productos..." oninput="filtrarProductos()">
-
-        <select id="select-categoria" onchange="filtrarProductos()">
-            <option value="">Todas las categorías</option>
-        </select>
-
-        <div class="rango-precio">
-            <input type="number" id="precio-min" placeholder="Precio mín" oninput="filtrarProductos()">
-            <input type="number" id="precio-max" placeholder="Precio máx" oninput="filtrarProductos()">
-        </div>
-
-        
-    </section>
-
-    <section id="productos-container" class="productos-container">
+    <!--<section id="carrito-container" class="carrito-container">
         <p>Cargando productos...</p>
-    </section>
+    </section>-->
+    <div class="container">
+        <div id="items"></div>
+
+        <div id="total" class="total-box">Total: $0.00</div>
+
+        <div class="actions">
+            <button class="btn-cancelar" onclick="cancelarCompra()">Cancelar</button>
+            <button class="btn-finalizar" onclick="finalizarCompra()">Finalizar Compra</button>
+        </div>
+    </div>
+
     </main>
 
     <footer>
         <p>2025 ©Mercadito Online</p>
     </footer>
 
+    <script src="script-carrito.js"></script>
     <script src="script.js"></script>
 </body>
 </html>

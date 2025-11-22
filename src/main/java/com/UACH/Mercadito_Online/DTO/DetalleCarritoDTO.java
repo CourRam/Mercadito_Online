@@ -11,4 +11,5 @@ public class DetalleCarritoDTO {
     private Long idProducto;
     private Integer cantidad;
     private BigDecimal subtotal;
+    private String nombreProducto;
 }

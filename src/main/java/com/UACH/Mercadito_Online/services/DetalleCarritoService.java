@@ -23,9 +23,7 @@ public class DetalleCarritoService {
     private CarritoRepository carritoRepository;
 
 
-    // =============================
     //   AGREGAR PRODUCTO AL CARRITO
-    // =============================
     public DetalleCarritoEntity agregarProducto(Long idCarrito, Long idProducto, Integer cantidadAgregar) {
 
         ProductosEntity producto = productosRepository.findById(idProducto)
@@ -70,17 +68,14 @@ public class DetalleCarritoService {
     }
 
 
-    // =============================
+
     //      LISTAR DETALLES
-    // =============================
     public List<DetalleCarritoEntity> listarPorCarrito(Long idCarrito) {
         return detalleCarritoRepository.findByCarrito_IdCarrito(idCarrito);
     }
 
 
-    // =============================
     //      ACTUALIZAR CANTIDAD
-    // =============================
     public DetalleCarritoEntity actualizarCantidad(Long idCarrito, Long idProducto, Integer nuevaCantidad) {
 
         ProductosEntity producto = productosRepository.findById(idProducto)
@@ -110,18 +105,15 @@ public class DetalleCarritoService {
     }
 
 
-    // =============================
+
     //      ELIMINAR PRODUCTO
-    // =============================
     public void eliminarProducto(Long idCarrito, Long idProducto) {
         DetalleCarritoID id = new DetalleCarritoID(idCarrito, idProducto);
         detalleCarritoRepository.deleteById(id);
     }
 
 
-    // =============================
     //      VACIAR CARRITO
-    // =============================
     public void vaciarCarrito(Long idCarrito) {
         List<DetalleCarritoEntity> detalles = listarPorCarrito(idCarrito);
         detalleCarritoRepository.deleteAll(detalles);

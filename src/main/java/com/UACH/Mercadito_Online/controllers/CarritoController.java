@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+
 @RestController
 @RequestMapping("/api/carritos")
 @CrossOrigin(origins = "*")
@@ -34,6 +35,15 @@ public class CarritoController {
         CarritoEntity carrito = carritoService.obtenerCarritoActivo(idUsuario);
         return ResponseEntity.ok(carritoMapper.toDTO(carrito));
     }
+
+    //Completar la compra
+    @PostMapping("/completarCompra")
+    public ResponseEntity<String> completarCompra(@RequestParam Long idCarrito) {
+        carritoService.CompletarCompra(idCarrito);
+        return ResponseEntity.ok("Compra completada exitosamente");
+    }
+
+    
 
     // Obtener todos los carritos (admin/debug) - devuelve entidades (opcional)
     @GetMapping

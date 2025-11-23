@@ -5,6 +5,7 @@ import com.UACH.Mercadito_Online.persistance.repositories.CarritoRepository;
 import com.UACH.Mercadito_Online.persistance.repositories.UsuariosRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
@@ -82,6 +83,7 @@ public class CarritoService {
         carritoRepository.deleteAll();
     }
 
+    @Transactional
     public void CompletarCompra(Long idCarrito){
         CarritoEntity carrito = obtenerPorId(idCarrito);
         carrito.setEstado("COMPLETADA");

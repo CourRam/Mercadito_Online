@@ -9,14 +9,13 @@ if (!usuario.idUsuario) {
   window.location.href = "index.html";
 }
 
-
 //   Cargar carrito al iniciar
 async function cargarCarrito() {
   try {
     const res = await fetch(`${API_CARRITO}?idUsuario=${usuario.idUsuario}`, {
       method: "POST",
     });
-    
+
     if (!res.ok) throw new Error("Error al obtener el carrito");
     carrito = await res.json();
     renderCarrito();
@@ -24,7 +23,6 @@ async function cargarCarrito() {
     alert("No se pudo cargar el carrito: " + error.message);
   }
 }
-
 
 //     Mostrar productos
 function renderCarrito() {
@@ -60,7 +58,6 @@ function renderCarrito() {
   document.getElementById("total").innerText = "Total: $" + carrito.total;
 }
 
-
 //   Cambiar cantidad (+ / -)
 async function cambiarCantidad(idProducto, nuevaCantidad) {
   if (nuevaCantidad <= 0) return eliminar(idProducto);
@@ -75,10 +72,10 @@ async function cambiarCantidad(idProducto, nuevaCantidad) {
   cargarCarrito();
 }
 
-
 //   Eliminar producto
 async function eliminar(idProducto) {
-  await fetch(`${API_DETALLE}/${carrito.idCarrito}/eliminar?idProducto=${idProducto}`,
+  await fetch(
+    `${API_DETALLE}/${carrito.idCarrito}/eliminar?idProducto=${idProducto}`,
     {
       method: "DELETE",
     }
@@ -87,12 +84,23 @@ async function eliminar(idProducto) {
   cargarCarrito();
 }
 
-
 //   Finalizar compra
 async function finalizarCompra() {
-  alert("Compra finalizada (pendiente implementar en backend)");
-}
+    const res = await fetch(
+      `http://localhost:8081/api/carritos/completarCompra?idCarrito=${carrito.idCarrito}`,
+      {
+        method: "POST",
+      }
+    );
 
+    
+    const mensaje = await res.text();
+    console.log(mensaje); 
+    alert(mensaje);
+    location.reload();
+    return mensaje;
+  
+}
 
 //   Cancelar compra
 async function cancelarCompra() {

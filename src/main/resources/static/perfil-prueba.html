@@ -1,0 +1,441 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Perfil - Mercadito</title>
+  <style>
+    /* --- RESET / BASE --- */
+    * { box-sizing: border-box; }
+    body { font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; margin:0; background:#f5f7fb; color:#111; }
+    a { color:inherit; text-decoration:none; }
+    .container { max-width:1100px; margin:28px auto; padding:18px; }
+
+    /* --- HEADER --- */
+    header.profile-header { display:flex; gap:18px; align-items:center; margin-bottom:18px; }
+    .avatar { width:96px; height:96px; border-radius:12px; background:linear-gradient(135deg,#e3eefc,#d9f0e6); display:flex; align-items:center; justify-content:center; font-weight:700; font-size:28px; color:#0b5; }
+    .user-info { flex:1; }
+    .user-info h1 { margin:0 0 6px 0; font-size:22px; }
+    .user-meta { color:#556; font-size:14px; display:flex; gap:12px; flex-wrap:wrap; margin-bottom:8px; }
+    .actions { display:flex; gap:8px; }
+
+    .btn { padding:8px 12px; border-radius:8px; cursor:pointer; border:1px solid rgba(0,0,0,0.06); background:#fff; box-shadow: 0 1px 2px rgba(10,20,40,0.03); }
+    .btn.primary { background:#0b74ff; color:#fff; border-color:transparent; }
+    .muted { color:#666; font-size:13px; }
+
+    /* --- LAYOUT --- */
+    .cols { display:grid; grid-template-columns: 1fr 360px; gap:18px; align-items:start; }
+    .card { background:#fff; padding:14px; border-radius:12px; box-shadow: 0 6px 18px rgba(14,30,60,0.04); }
+
+    /* --- SECTIONS --- */
+    h2.section-title { margin:0 0 12px 0; font-size:16px; }
+    ul.list { list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:10px; }
+    .venta-item, .producto-item { display:flex; gap:12px; align-items:flex-start; padding:10px; border-radius:8px; border:1px solid #f0f3f7; }
+    .thumb { width:84px; height:64px; background:#f2f6fb; border-radius:8px; display:block; object-fit:cover; }
+    .meta { flex:1; }
+    .meta .title { font-weight:600; }
+    .meta .sub { color:#666; font-size:13px; }
+    .right { text-align:right; min-width:120px; }
+
+    .small { font-size:13px; color:#555; }
+    .danger { background:#ffeaea; color:#a33; border:1px solid #fcc; padding:8px; border-radius:8px; }
+
+    /* responsive */
+    @media (max-width:920px) {
+      .cols { grid-template-columns: 1fr; }
+      .right { min-width:unset; text-align:left; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header class="profile-header">
+      <div class="avatar" id="avatar">U</div>
+      <div class="user-info card">
+        <h1 id="nombreUsuario">Cargando usuario...</h1>
+        <div class="user-meta">
+          <div id="correoUsuario" class="muted"></div>
+          <div id="telefonoUsuario" class="muted"></div>
+        </div>
+        <div class="actions">
+          <button class="btn" id="btnEditar">Editar perfil</button>
+          <button class="btn" id="btnVolver">Volver al marketplace</button>
+        </div>
+      </div>
+    </header>
+
+    <div class="cols">
+      <!-- MAIN COLUMN -->
+      <main>
+        <section class="card" style="margin-bottom:14px;">
+          <h2 class="section-title">Historial de Compras</h2>
+          <div id="historialContainer">
+            <p class="muted">Cargando historial...</p>
+          </div>
+        </section>
+
+        <section class="card" style="margin-bottom:14px;">
+          <h2 class="section-title">Mis productos publicados (activos)</h2>
+          <div id="productosActivosContainer">
+            <p class="muted">Cargando productos...</p>
+          </div>
+        </section>
+
+        <section class="card">
+          <h2 class="section-title">Productos vendidos</h2>
+          <div id="productosVendidosContainer">
+            <p class="muted">Cargando vendidos...</p>
+          </div>
+        </section>
+      </main>
+
+      <!-- SIDEBAR -->
+      <aside>
+        <div class="card" style="margin-bottom:12px;">
+          <h2 class="section-title">Resumen</h2>
+          <div id="resumen">
+            <p class="small">Compras: <strong id="countCompras">0</strong></p>
+            <p class="small">Productos activos: <strong id="countActivos">0</strong></p>
+            <p class="small">Productos vendidos: <strong id="countVendidos">0</strong></p>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2 class="section-title">Ayuda</h2>
+          <p class="muted">Si falta información en las listas puede ser porque los endpoints del backend aún no existen. Revisa consola para detalles.</p>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <script>
+  /* ============================
+     perfil.js — Conexión al backend
+     ============================ */
+
+  const API_BASE = "http://localhost:8081";
+  const USER_ID = (() => {
+    try {
+      const u = JSON.parse(localStorage.getItem("usuario"));
+      return u?.idUsuario ?? null;
+    } catch(e){ return null; }
+  })();
+
+  // DOM refs
+  const nombreEl = document.getElementById("nombreUsuario");
+  const correoEl = document.getElementById("correoUsuario");
+  const telefonoEl = document.getElementById("telefonoUsuario");
+  const avatarEl = document.getElementById("avatar");
+
+  const historialContainer = document.getElementById("historialContainer");
+  const productosActivosContainer = document.getElementById("productosActivosContainer");
+  const productosVendidosContainer = document.getElementById("productosVendidosContainer");
+
+  const countCompras = document.getElementById("countCompras");
+  const countActivos = document.getElementById("countActivos");
+  const countVendidos = document.getElementById("countVendidos");
+
+  // navegación simple
+  document.getElementById("btnVolver").addEventListener("click", () => window.location.href = "index.html");
+
+  // seguridad básica
+  if (!USER_ID) {
+    nombreEl.textContent = "Usuario no identificado";
+    correoEl.textContent = "";
+    telefonoEl.textContent = "";
+    historialContainer.innerHTML = `<p class="muted">Debes iniciar sesión para ver tu perfil.</p>`;
+    productosActivosContainer.innerHTML = "";
+    productosVendidosContainer.innerHTML = "";
+    throw new Error("No hay usuario en localStorage (usuario).");
+  }
+
+  // Util helpers
+  function safe(obj, path, defaultVal = null) {
+    try {
+      return path.split('.').reduce((s,p) => (s && s[p] !== undefined) ? s[p] : undefined, obj) ?? defaultVal;
+    } catch { return defaultVal; }
+  }
+
+  function fmtMoney(n) {
+    if (n == null) return "-";
+    try { return Number(n).toLocaleString('es-MX', { style:'currency', currency:'MXN' }); } catch { return n; }
+  }
+
+  // Fetch user
+  async function fetchUsuario() {
+    const url = `${API_BASE}/api/usuarios/${USER_ID}`;
+    try {
+      const res = await fetch(url);
+      if (!res.ok) throw new Error("Error al obtener usuario");
+      const user = await res.json();
+      renderUsuario(user);
+      return user;
+    } catch (err) {
+      console.error("fetchUsuario:", err);
+      nombreEl.textContent = "No se pudo cargar el usuario";
+      correoEl.textContent = "";
+      telefonoEl.textContent = "";
+      return null;
+    }
+  }
+
+  function renderUsuario(u) {
+    const nombre = safe(u, "nombre", "Usuario");
+    const correo = safe(u, "correo", "");
+    const telefono = safe(u, "telefono", "");
+    nombreEl.textContent = nombre;
+    correoEl.textContent = correo;
+    telefonoEl.textContent = telefono ? telefono : "";
+    avatarEl.textContent = nombre ? nombre.slice(0,1).toUpperCase() : "U";
+  }
+
+  // Fetch all productos DTO and filter by usuario
+  async function fetchProductosUsuario() {
+    const url = `${API_BASE}/api/productos/listarDTO`;
+    try {
+      const res = await fetch(url);
+      if (!res.ok) throw new Error("No se pudieron obtener productos");
+      const productos = await res.json();
+      // ProductosDTO tiene campos: idProducto, nombre, descripcion, precio, imagenUrl, categoriaId, usuarioId, stock
+      const misProductos = productos.filter(p => Number(p.usuarioId) === Number(USER_ID));
+      return misProductos;
+    } catch (err) {
+      console.error("fetchProductosUsuario:", err);
+      return [];
+    }
+  }
+
+  // Fetch historial ventas (tratamos de usar endpoint específico si existe,
+  // si no, pedimos todo y filtramos del lado cliente)
+  async function fetchHistorialVentas() {
+    // primero intentamos endpoint por usuario (si lo implementas en backend)
+    try {
+      const byUserUrl = `${API_BASE}/historial-ventas/usuario/${USER_ID}`;
+      const resUser = await fetch(byUserUrl);
+      if (resUser.ok) {
+        const ventas = await resUser.json();
+        return ventas;
+      }
+    } catch (e) {
+      // ignore, probaremos con /historial-ventas
+    }
+
+    // fallback: obtener todas las ventas y filtrar localmente para mostrar
+    try {
+      const res = await fetch(`${API_BASE}/historial-ventas`);
+      if (!res.ok) throw new Error("No se pudo obtener historial");
+      const ventas = await res.json();
+      return ventas;
+    } catch (err) {
+      console.error("fetchHistorialVentas:", err);
+      return [];
+    }
+  }
+
+  // RENDERERS
+  function renderHistorialCompras(ventas) {
+    // Interpretamos: una venta puede tener: idVenta, carrito, fecha, total, detalles (detalleCarrito)
+    // Buscamos ventas donde comprador/carrito.usuario.idUsuario == USER_ID OR venta.compradorId == USER_ID
+    const compras = ventas.filter(v => {
+      const compradorId = safe(v, "carrito.usuario.idUsuario") || safe(v, "compradorId") || safe(v, "usuarioCompradorId");
+      return Number(compradorId) === Number(USER_ID);
+    });
+
+    countCompras.textContent = compras.length;
+
+    if (compras.length === 0) {
+      historialContainer.innerHTML = `<p class="muted">No hay compras registradas.</p>`;
+      return;
+    }
+
+    const list = document.createElement("ul");
+    list.className = "list";
+
+    compras.forEach(v => {
+      const fecha = safe(v, "fecha", safe(v, "fechaVenta", "Sin fecha"));
+      const total = safe(v, "total", safe(v, "monto", "-"));
+      const detalles = safe(v, "detalleCarrito", safe(v, "detalles", []));
+
+      const item = document.createElement("li");
+      item.className = "venta-item";
+
+      const left = document.createElement("div");
+      left.style.flex = "1";
+
+      const title = document.createElement("div");
+      title.className = "title";
+      title.textContent = `Compra #${safe(v, "idVenta", safe(v, "id", "—"))} • ${new Date(fecha).toLocaleString() || fecha}`;
+
+      const subt = document.createElement("div");
+      subt.className = "sub";
+      subt.innerHTML = `<strong>${fmtMoney(total)}</strong> — ${detalles.length} productos`;
+
+      left.appendChild(title);
+      left.appendChild(subt);
+
+      const right = document.createElement("div");
+      right.className = "right";
+      right.innerHTML = `<div class="small">Ver detalles</div>`;
+
+      // agregar listener para ver detalles (simple modal alert)
+      right.addEventListener("click", () => {
+        const detalleTxt = detalles.map(d => {
+          const nombre = safe(d, "producto.nombre") || safe(d, "nombreProducto") || `Producto ${safe(d, "idProducto", safe(d, "productoId","?"))}`;
+          const cantidad = safe(d, "cantidad", 1);
+          const precio = safe(d, "subtotal", safe(d, "precio", "-"));
+          return `${nombre} x ${cantidad} → ${fmtMoney(precio)}`;
+        }).join("\n");
+        alert(`Detalles de la compra:\n\n${detalleTxt}\n\nTotal: ${fmtMoney(total)}`);
+      });
+
+      item.appendChild(left);
+      item.appendChild(right);
+      list.appendChild(item);
+    });
+
+    historialContainer.innerHTML = "";
+    historialContainer.appendChild(list);
+  }
+
+  function renderProductosActivos(productos) {
+    const activos = productos.filter(p => Number(p.stock) > 0);
+    countActivos.textContent = activos.length;
+
+    if (activos.length === 0) {
+      productosActivosContainer.innerHTML = `<p class="muted">No hay productos activos.</p>`;
+      return;
+    }
+
+    const list = document.createElement("ul");
+    list.className = "list";
+
+    activos.forEach(p => {
+      const li = document.createElement("li");
+      li.className = "producto-item";
+
+      const img = document.createElement("img");
+      img.className = "thumb";
+      img.src = p.imagenUrl || "https://via.placeholder.com/160x120?text=Sin+imagen";
+      img.alt = p.nombre;
+
+      const meta = document.createElement("div");
+      meta.className = "meta";
+      meta.innerHTML = `<div class="title">${p.nombre}</div>
+                        <div class="sub">${p.descripcion ? p.descripcion.slice(0,120) : ""}</div>
+                        <div class="small">Stock: <strong>${p.stock}</strong> — Precio: <strong>${fmtMoney(p.precio)}</strong></div>`;
+
+      const right = document.createElement("div");
+      right.className = "right";
+      right.innerHTML = `<button class="btn">Editar</button> <button class="btn danger" onclick="alert('Función pendiente')">Marcar vendido</button>`;
+
+      li.appendChild(img);
+      li.appendChild(meta);
+      li.appendChild(right);
+      list.appendChild(li);
+    });
+
+    productosActivosContainer.innerHTML = "";
+    productosActivosContainer.appendChild(list);
+  }
+
+  function renderProductosVendidos(aggVendidos, productosMap) {
+    // aggVendidos: { idProducto -> { cantidadVendida, totalGanado, ultimaVentaDate } }
+    const keys = Object.keys(aggVendidos || {});
+    countVendidos.textContent = keys.length;
+
+    if (keys.length === 0) {
+      productosVendidosContainer.innerHTML = `<p class="muted">Aún no se han registrado ventas de tus productos.</p>`;
+      return;
+    }
+
+    const list = document.createElement("ul");
+    list.className = "list";
+
+    keys.forEach(id => {
+      const info = aggVendidos[id];
+      const producto = productosMap[id];
+
+      const li = document.createElement("li");
+      li.className = "producto-item";
+
+      const img = document.createElement("img");
+      img.className = "thumb";
+      img.src = producto?.imagenUrl || "https://via.placeholder.com/160x120?text=Sin+imagen";
+
+      const meta = document.createElement("div");
+      meta.className = "meta";
+      meta.innerHTML = `<div class="title">${producto?.nombre || ("Producto " + id)}</div>
+                        <div class="sub">Vendidos: <strong>${info.cantidadVendida}</strong> — Ganancia: <strong>${fmtMoney(info.totalGanado)}</strong></div>
+                        <div class="small">Última venta: ${new Date(info.ultimaVentaDate).toLocaleString()}</div>`;
+
+      const right = document.createElement("div");
+      right.className = "right";
+      right.innerHTML = `<div class="small">Ver reporte</div>`;
+
+      li.appendChild(img);
+      li.appendChild(meta);
+      li.appendChild(right);
+      list.appendChild(li);
+    });
+
+    productosVendidosContainer.innerHTML = "";
+    productosVendidosContainer.appendChild(list);
+  }
+
+  // LOGICA: agrupar ventas para productos vendidos del usuario
+  function agruparVendidosPorProducto(ventas, misProductos) {
+    const productosMap = {};
+    misProductos.forEach(p => { productosMap[p.idProducto] = p; });
+
+    const agg = {}; // idProducto => { cantidadVendida, totalGanado, ultimaVentaDate }
+    ventas.forEach(v => {
+      const detalles = safe(v, "detalleCarrito", safe(v, "detalles", []));
+      detalles.forEach(d => {
+        const prod = safe(d, "producto") || { idProducto: safe(d, "idProducto"), nombre: safe(d, "nombreProducto") };
+        const id = String(safe(prod, "idProducto", safe(d, "idProducto")));
+        // solo considerar si el producto pertenece al usuario
+        const pertenece = productosMap[id] || (safe(prod, "usuario") && Number(safe(prod,"usuario.idUsuario")) === Number(USER_ID));
+        if (!pertenece) return;
+
+        const cantidad = Number(safe(d, "cantidad", 1));
+        const subtotal = Number(safe(d, "subtotal", safe(d, "precio", 0)));
+
+        if (!agg[id]) agg[id] = { cantidadVendida: 0, totalGanado: 0, ultimaVentaDate: null };
+        agg[id].cantidadVendida += cantidad;
+        agg[id].totalGanado += subtotal;
+        const fecha = new Date(safe(v, "fecha", safe(v, "fechaVenta", Date.now())));
+        if (!agg[id].ultimaVentaDate || fecha > new Date(agg[id].ultimaVentaDate)) {
+          agg[id].ultimaVentaDate = fecha.toISOString();
+        }
+      });
+    });
+
+    return { agg, productosMap };
+  }
+
+  // ORQUESTADOR
+  async function initProfile() {
+    const [ user, productos, ventas ] = await Promise.all([
+      fetchUsuario(),
+      fetchProductosUsuario(),
+      fetchHistorialVentas()
+    ]);
+
+    // render productos activos (filtrando por stock)
+    renderProductosActivos(productos || []);
+
+    // historial de compras: filtramos ventas donde comprador === USER_ID
+    renderHistorialCompras(ventas || []);
+
+    // productos vendidos -> agregamos por detalle de venta
+    const { agg, productosMap } = agruparVendidosPorProducto(ventas || [], productos || []);
+    renderProductosVendidos(agg, productosMap);
+
+    // counts ya actualizados en renderers
+  }
+
+  // arrancar
+  initProfile();
+  </script>
+</body>
+</html>

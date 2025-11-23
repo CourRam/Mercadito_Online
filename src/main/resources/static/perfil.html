@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mercadito Online</title>
     <link rel="stylesheet" href="style-index.css"/>
+    <link rel="stylesheet" href="perfil.css" />
     
 </head>
 <body>
@@ -22,7 +23,51 @@
     </header>
 
     <main>
-    
+        <div class="perfil-container">
+
+        <h1>Mi Perfil</h1>
+
+        <!-- Datos del usuario -->
+        <section class="perfil-section" id="datos-usuario">
+            <h2>Datos personales</h2>
+            <div id="usuario-info" class="info-box">
+                <!-- Se llena desde JS -->
+            </div>
+        </section>
+
+        <!-- Historial de compras -->
+        <section class="perfil-section">
+            <h2>Historial de compras</h2>
+            <table class="tabla" id="tabla-historial">
+                <thead>
+                    <tr>
+                        <th>ID Venta</th>
+                        <th>Fecha</th>
+                        <th>Total</th>
+                        <th>Productos</th>
+                    </tr>
+                </thead>
+                <tbody id="historial-body">
+                    <!-- Se llena desde JS -->
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Productos activos -->
+        <section class="perfil-section">
+            <h2>Mis productos activos en venta</h2>
+            <div id="productos-activos" class="card-list">
+                <!-- Se llena desde JS -->
+            </div>
+        </section>
+
+        <!-- Productos vendidos -->
+        <section class="perfil-section">
+            <h2>Mis productos vendidos</h2>
+            <div id="productos-vendidos" class="card-list">
+                <!-- Se llena desde JS -->
+            </div>
+        </section>
     
     </main>
 
@@ -31,5 +76,6 @@
     </footer>
 
     <script src="script.js"></script>
+    <script src="perfil.js"></script>
 </body>
 </html>

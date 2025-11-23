@@ -6,6 +6,7 @@ import com.UACH.Mercadito_Online.persistance.repositories.DetalleCarritoReposito
 import com.UACH.Mercadito_Online.persistance.repositories.ProductosRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -107,9 +108,10 @@ public class DetalleCarritoService {
 
 
     //      ELIMINAR PRODUCTO
+    @Transactional
     public void eliminarProducto(Long idCarrito, Long idProducto) {
-        DetalleCarritoID id = new DetalleCarritoID(idCarrito, idProducto);
-        detalleCarritoRepository.deleteById(id);
+        //DetalleCarritoID id = new DetalleCarritoID(idCarrito, idProducto);
+        detalleCarritoRepository.deleteByCarrito_IdCarritoAndProducto_IdProducto(idCarrito, idProducto);
     }
 
 

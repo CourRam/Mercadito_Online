@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface DetalleCarritoRepository extends JpaRepository<DetalleCarritoEntity, DetalleCarritoID> {
+public interface DetalleCarritoRepository extends JpaRepository<DetalleCarritoEntity, Long> {
 
     // Obtener todos los detalles del carrito
     List<DetalleCarritoEntity> findByCarrito_IdCarrito(Long idCarrito);
@@ -23,4 +23,10 @@ public interface DetalleCarritoRepository extends JpaRepository<DetalleCarritoEn
     );
 
     List<DetalleCarritoEntity> findByCarrito(CarritoEntity carrito);
+
+    //no jala
+    //void deleteByIdCarritoAndIdProducto(Long idCarrito, Long idProducto);
+
+    //void deleteByCarrito_IdAndProducto_Id(Long idCarrito, Long idProducto);
+    void deleteByCarrito_IdCarritoAndProducto_IdProducto(Long idCarrito, Long idProducto);
 }

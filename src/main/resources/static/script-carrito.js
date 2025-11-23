@@ -5,26 +5,18 @@ let carrito = null;
 const usuario = JSON.parse(localStorage.getItem("usuario") || "{}");
 
 if (!usuario.idUsuario) {
-  alert("⚠ No hay sesión iniciada.");
+  alert("No hay sesión iniciada.");
   window.location.href = "index.html";
 }
 
-// ===============================
+
 //   Cargar carrito al iniciar
-// ===============================
 async function cargarCarrito() {
   try {
     const res = await fetch(`${API_CARRITO}?idUsuario=${usuario.idUsuario}`, {
       method: "POST",
     });
-    /*const res = await fetch(API_CARRITO, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({ idUsuario: usuario.idUsuario })
-            });*/
-
+    
     if (!res.ok) throw new Error("Error al obtener el carrito");
     carrito = await res.json();
     renderCarrito();
@@ -33,9 +25,8 @@ async function cargarCarrito() {
   }
 }
 
-// ===============================
+
 //     Mostrar productos
-// ===============================
 function renderCarrito() {
   const cont = document.getElementById("items");
   cont.innerHTML = "";
@@ -69,9 +60,8 @@ function renderCarrito() {
   document.getElementById("total").innerText = "Total: $" + carrito.total;
 }
 
-// ===============================
+
 //   Cambiar cantidad (+ / -)
-// ===============================
 async function cambiarCantidad(idProducto, nuevaCantidad) {
   if (nuevaCantidad <= 0) return eliminar(idProducto);
 
@@ -85,12 +75,10 @@ async function cambiarCantidad(idProducto, nuevaCantidad) {
   cargarCarrito();
 }
 
-// ===============================
+
 //   Eliminar producto
-// ===============================
 async function eliminar(idProducto) {
-  await fetch(
-    `${API_DETALLE}/${carrito.idCarrito}/eliminar?idProducto=${idProducto}`,
+  await fetch(`${API_DETALLE}/${carrito.idCarrito}/eliminar?idProducto=${idProducto}`,
     {
       method: "DELETE",
     }
@@ -99,16 +87,14 @@ async function eliminar(idProducto) {
   cargarCarrito();
 }
 
-// ===============================
+
 //   Finalizar compra
-// ===============================
 async function finalizarCompra() {
   alert("Compra finalizada (pendiente implementar en backend)");
 }
 
-// ===============================
+
 //   Cancelar compra
-// ===============================
 async function cancelarCompra() {
   await fetch(`${API_DETALLE}/${carrito.idCarrito}/vaciar`, {
     method: "DELETE",

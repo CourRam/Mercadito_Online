@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.UACH.Mercadito_Online.DTO.HistorialVentasDTO;
 import com.UACH.Mercadito_Online.persistance.entities.CarritoEntity;
 import com.UACH.Mercadito_Online.persistance.entities.DetalleCarritoEntity;
 import com.UACH.Mercadito_Online.persistance.entities.HistorialVentasEntity;
@@ -15,10 +16,12 @@ import com.UACH.Mercadito_Online.persistance.repositories.CarritoRepository;
 import com.UACH.Mercadito_Online.persistance.repositories.DetalleCarritoRepository;
 import com.UACH.Mercadito_Online.persistance.repositories.HistorialVentasRepository;
 import com.UACH.Mercadito_Online.persistance.repositories.ProductosRepository;
+import com.UACH.Mercadito_Online.mappers.HistorialVentasMapper;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 //@AllArgsConstructor
 //@NoArgsConstructor
@@ -34,6 +37,8 @@ public class HistorialVentasService {
     @Autowired
     private  ProductosRepository productosRepository;
 
+    @Autowired
+    private HistorialVentasMapper historialVentasMapper;
 
     // Listar todas las ventas
     public List<HistorialVentasEntity> listarVentas() {
@@ -100,5 +105,15 @@ public class HistorialVentasService {
             throw new IllegalArgumentException("No se encontró la venta con ID: " + idVenta);
         }
         historialVentasRepository.deleteById(idVenta);
+    }
+
+    public List<HistorialVentasDTO> obtenerHistorialPorUsuario(Long idUsuario) {
+    
+        List<HistorialVentasEntity> listaEntity=historialVentasRepository.obtenerHistorialPorUsuario(idUsuario);
+        return listaEntity.stream()
+                        .map(historialVentasMapper::toDTO)
+                        .collect(Collectors.toList());
+
+
     }
 }

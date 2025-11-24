@@ -47,6 +47,9 @@ public interface HistorialVentasRepository extends JpaRepository<HistorialVentas
     """)
     BigDecimal calcularGananciasPorVendedor(@Param("idUsuario") Long idUsuario);
 
+
+    @Query("SELECT h FROM HistorialVentasEntity h WHERE h.carrito.usuario.idUsuario = :idUsuario")
+    List<HistorialVentasEntity> obtenerHistorialPorUsuario(@Param("idUsuario") Long idUsuario);
     //List<HistorialVentasEntity> findByProductoIdProducto(Long idProducto); Arreglar si se llega a usar
     /* Posible solucion no probada
     // Buscar todas las ventas donde el carrito contenga el producto indicado

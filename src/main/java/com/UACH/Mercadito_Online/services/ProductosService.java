@@ -42,9 +42,12 @@ public class ProductosService {
             MultipartFile imagen) throws IOException {
 
         // Validaciones básicas
-        if (nombre == null || nombre.isBlank()) throw new IllegalArgumentException("El nombre es obligatorio");
-        if (precio == null || precio.compareTo(BigDecimal.ZERO) <= 0) throw new IllegalArgumentException("Precio inválido");
-        if (stock == null || stock < 0) throw new IllegalArgumentException("Stock inválido");
+        if (nombre == null || nombre.isBlank())
+            throw new IllegalArgumentException("El nombre es obligatorio");
+        if (precio == null || precio.compareTo(BigDecimal.ZERO) <= 0)
+            throw new IllegalArgumentException("Precio inválido");
+        if (stock == null || stock < 0)
+            throw new IllegalArgumentException("Stock inválido");
 
         // Validar tipo de archivo
         String contentType = imagen.getContentType();
@@ -66,7 +69,8 @@ public class ProductosService {
 
         // Crear carpeta si no existe
         File uploadDir = new File(UPLOAD_DIR);
-        if (!uploadDir.exists()) uploadDir.mkdirs();
+        if (!uploadDir.exists())
+            uploadDir.mkdirs();
 
         // Limpiar nombre de archivo
         String originalName = imagen.getOriginalFilename().replaceAll("[^a-zA-Z0-9\\.\\-]", "_");
@@ -93,17 +97,16 @@ public class ProductosService {
 
     public List<ProductosDTO> listarProductosDTO() {
         return productosRepository.findAll().stream()
-        .map(p -> new ProductosDTO(
-                p.getIdProducto(),
-                p.getNombre(),
-                p.getDescripcion(),
-                p.getPrecio(),
-                p.getImagenUrl(),
-                p.getCategoria() != null ? p.getCategoria().getIdCategoria() : null,
-                p.getUsuario() != null ? p.getUsuario().getIdUsuario() : null,
-                p.getStock()
-            ))
-            .toList();
+                .map(p -> new ProductosDTO(
+                        p.getIdProducto(),
+                        p.getNombre(),
+                        p.getDescripcion(),
+                        p.getPrecio(),
+                        p.getImagenUrl(),
+                        p.getCategoria() != null ? p.getCategoria().getIdCategoria() : null,
+                        p.getUsuario() != null ? p.getUsuario().getIdUsuario() : null,
+                        p.getStock()))
+                .toList();
     }
 
     public ProductosEntity obtenerPorId(Long id) {
@@ -113,5 +116,13 @@ public class ProductosService {
 
     public void eliminarProducto(Long id) {
         productosRepository.deleteById(id);
+    }
+
+    public List<ProductosEntity> obtenerActivosPorUsuario(Long idUsuario) {
+        return productosRepository.obtenerActivosPorUsuario(idUsuario);
+    }
+
+    public List<ProductosEntity> obtenerVendidosPorUsuario(Long idUsuario) {
+        return productosRepository.obtenerVendidosPorUsuario(idUsuario);
     }
 }

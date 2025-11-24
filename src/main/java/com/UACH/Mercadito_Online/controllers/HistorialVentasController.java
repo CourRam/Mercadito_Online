@@ -1,5 +1,6 @@
 package com.UACH.Mercadito_Online.controllers;
 
+import com.UACH.Mercadito_Online.DTO.HistorialVentasDTO;
 import com.UACH.Mercadito_Online.persistance.entities.HistorialVentasEntity;
 import com.UACH.Mercadito_Online.services.HistorialVentasService;
 import org.springframework.http.ResponseEntity;
@@ -9,7 +10,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
-@RequestMapping("/historial-ventas")
+@RequestMapping("/api/historial-ventas")
 @CrossOrigin(origins = "*")
 public class HistorialVentasController {
 
@@ -50,5 +51,11 @@ public class HistorialVentasController {
     public ResponseEntity<Void> eliminarVenta(@PathVariable Long idVenta) {
         historialVentasService.eliminarVenta(idVenta);
         return ResponseEntity.noContent().build();
+    }
+
+    // Obtener historial de compras del usuario
+    @GetMapping("/usuario/{idUsuario}")
+    public ResponseEntity<List<HistorialVentasDTO>> obtenerHistorialPorUsuario(@PathVariable Long idUsuario) {
+        return ResponseEntity.ok(historialVentasService.obtenerHistorialPorUsuario(idUsuario));
     }
 }

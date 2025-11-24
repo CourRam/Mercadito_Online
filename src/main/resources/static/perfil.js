@@ -1,8 +1,12 @@
-const ID_USUARIO = 1; // Cambiar por el usuario logueado
-
+const user = JSON.parse(localStorage.getItem("usuario") || "{}");
+const ID_USUARIO=user.idUsuario;
 // ------------------------ CARGAR DATOS DEL USUARIO ------------------------
 async function cargarUsuario() {
+
     const res = await fetch(`http://localhost:8081/api/usuarios/${ID_USUARIO}`);
+    if(!res.ok){
+        alert("error al cargar usuario");
+    }
     const usuario = await res.json();
 
     document.getElementById("usuario-info").innerHTML = `
@@ -15,6 +19,9 @@ async function cargarUsuario() {
 // ------------------------ HISTORIAL DE COMPRAS ------------------------
 async function cargarHistorial() {
     const res = await fetch(`http://localhost:8081/api/historial-ventas/usuario/${ID_USUARIO}`);
+    if(!res.ok){
+        alert("error al cargar historial");
+    }
     const historial = await res.json();
 
     const tbody = document.getElementById("historial-body");
@@ -26,7 +33,6 @@ async function cargarHistorial() {
                 <td>${v.idVenta}</td>
                 <td>${v.fecha}</td>
                 <td>$${v.total}</td>
-                <td>${v.productos.map(p => p.nombre).join(", ")}</td>
             </tr>
         `;
     });

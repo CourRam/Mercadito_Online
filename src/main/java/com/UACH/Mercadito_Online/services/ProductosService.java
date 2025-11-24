@@ -84,6 +84,7 @@ public class ProductosService {
         producto.setDescripcion(descripcion);
         producto.setPrecio(precio);
         producto.setStock(stock);
+        producto.setStockInicial(stock);
         producto.setUsuario(usuario);
         producto.setCategoria(categoria);
         producto.setImagenUrl("/uploads/productos/" + fileName); // URL accesible desde el navegador
@@ -105,7 +106,10 @@ public class ProductosService {
                         p.getImagenUrl(),
                         p.getCategoria() != null ? p.getCategoria().getIdCategoria() : null,
                         p.getUsuario() != null ? p.getUsuario().getIdUsuario() : null,
-                        p.getStock()))
+                        p.getStock(),
+                        p.getStockInicial(),
+                        p.getStockInicial()-p.getStock(),
+                        BigDecimal.valueOf(p.getStockInicial()-p.getStock()).multiply(p.getPrecio())))
                 .toList();
     }
 

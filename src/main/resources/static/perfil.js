@@ -52,7 +52,7 @@ async function cargarProductosActivos() {
                 <h4>${p.nombre}</h4>
                 <p>${p.descripcion}</p>
                 <p><strong>$${p.precio}</strong></p>
-                <p><small>Stock: ${p.stock}</small></p>
+                <p><small>Stock Disponible: ${p.stock}</small></p>
             </div>
         `;
     });
@@ -71,7 +71,9 @@ async function cargarProductosVendidos() {
             <div class="card">
                 <h4>${p.nombre}</h4>
                 <p>${p.descripcion}</p>
-                <p><strong>Vendido por: $${p.precio}</strong></p>
+                <p><strong>Stock vendido: ${p.stockVendido}<strong/><p/>
+                <p><strong>Precio por unidad: $${p.precio}</strong></p>
+                <p><strong>Ganancia Total: $${p.gananciaTotal}</strong></p>
             </div>
         `;
     });

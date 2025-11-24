@@ -1,5 +1,7 @@
 package com.UACH.Mercadito_Online.mappers;
 
+import java.math.BigDecimal;
+
 import org.springframework.stereotype.Component;
 
 import com.UACH.Mercadito_Online.DTO.ProductosDTO;
@@ -21,10 +23,12 @@ public class ProductosMapper {
         dto.setPrecio(entity.getPrecio());
         dto.setImagenUrl(entity.getImagenUrl());
         dto.setStock(entity.getStock());
-
-        // Relaciones: solo exponemos los IDs
+        dto.setStockInicial(entity.getStockInicial());
         dto.setCategoriaId(entity.getCategoria() != null ? entity.getCategoria().getIdCategoria() : null);
         dto.setVendedorId(entity.getUsuario() != null ? entity.getUsuario().getIdUsuario() : null);
+        dto.setStockInicial(entity.getStockInicial());
+        dto.setStockVendido(entity.getStockInicial()-entity.getStock());
+        dto.setGananciaTotal(BigDecimal.valueOf(entity.getStockInicial()-entity.getStock()).multiply(entity.getPrecio()));
 
         return dto;
     }

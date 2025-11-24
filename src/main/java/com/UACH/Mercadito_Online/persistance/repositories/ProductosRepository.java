@@ -19,6 +19,6 @@ public interface ProductosRepository extends JpaRepository<ProductosEntity, Long
     @Query("SELECT p FROM ProductosEntity p WHERE p.usuario.idUsuario = :idUsuario AND p.stock > 0")
     List<ProductosEntity> obtenerActivosPorUsuario(@Param("idUsuario") Long idUsuario);
 
-    @Query("SELECT p FROM ProductosEntity p WHERE p.usuario.idUsuario = :idUsuario AND p.stock = 0")
+    @Query("SELECT p FROM ProductosEntity p WHERE p.usuario.idUsuario = :idUsuario AND p.stock <>p.stockInicial")
     List<ProductosEntity> obtenerVendidosPorUsuario(@Param("idUsuario") Long idUsuario);
 }

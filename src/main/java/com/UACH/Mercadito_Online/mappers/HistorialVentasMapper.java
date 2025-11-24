@@ -17,7 +17,7 @@ public class HistorialVentasMapper {
         dto.setIdVenta(entity.getIdVenta());
         dto.setIdCarrito(entity.getCarrito() != null ? entity.getCarrito().getIdCarrito() : null);
         dto.setIdUsuario(entity.getUsuario() != null ? entity.getUsuario().getIdUsuario() : null);
-        dto.setFecha(entity.getFecha());
+        dto.setFecha(entity.getFecha() != null ? entity.getFecha().toLocalDate() : null);
         dto.setTotal(entity.getTotal());
 
         return dto;

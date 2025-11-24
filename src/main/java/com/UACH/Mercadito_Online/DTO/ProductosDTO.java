@@ -18,4 +18,7 @@ public class ProductosDTO {
     private Long categoriaId;
     private Long vendedorId;
     private Integer stock;
+    private Integer stockInicial;
+    private Integer stockVendido;
+    private BigDecimal gananciaTotal;
 }

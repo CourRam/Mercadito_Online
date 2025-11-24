@@ -32,6 +32,9 @@ public class ProductosEntity {
     @Column(nullable = false)
     private Integer stock;
 
+    @Column
+    private Integer stockInicial;
+
     // Relación con el usuario (quien publica el producto)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_usuario", nullable = false)

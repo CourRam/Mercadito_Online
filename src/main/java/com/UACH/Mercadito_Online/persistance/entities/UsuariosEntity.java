@@ -33,7 +33,7 @@ public class UsuariosEntity {
     @Column(length = 255)
     private String direccion;
 
-    // 🔥 Evita ciclo Usuario → Carritos → Usuario → ...
+    // Evita ciclo Usuario → Carritos → Usuario → ...
     @OneToMany(mappedBy = "usuario")
     @JsonIgnore
     private List<CarritoEntity> carritos;

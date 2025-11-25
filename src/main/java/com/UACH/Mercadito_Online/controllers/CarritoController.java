@@ -52,7 +52,7 @@ public class CarritoController {
         return ResponseEntity.ok(carritos);
     }
 
-    // Obtener un carrito por su ID (devuelve DTO para consistencia)
+    // Obtener un carrito por su ID 
     @GetMapping("/{idCarrito}")
     public ResponseEntity<CarritoDTO> obtenerPorId(@PathVariable Long idCarrito) {
         CarritoEntity carrito = carritoService.obtenerPorId(idCarrito);
@@ -66,7 +66,7 @@ public class CarritoController {
         return ResponseEntity.ok("Carrito eliminado correctamente");
     }
 
-    // Eliminar todos los carritos (solo para pruebas o administración).
+    // Eliminar todos los carritos 
     @DeleteMapping("/eliminar-todos")
     public ResponseEntity<String> eliminarTodos() {
         carritoService.eliminarTodos();

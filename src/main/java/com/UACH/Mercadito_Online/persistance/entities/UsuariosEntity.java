@@ -1,4 +1,8 @@
 package com.UACH.Mercadito_Online.persistance.entities;
+import jakarta.validation.constraints.Email;
+
+
+
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
@@ -25,6 +29,7 @@ public class UsuariosEntity {
     private String correo;
 
     @Column(nullable = false, length = 255)
+    @Email(message = "El correo no es valido")
     private String password;
 
     @Column(length = 20)

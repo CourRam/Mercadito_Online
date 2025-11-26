@@ -23,12 +23,17 @@ public class UsuariosController {
     // Crear usuario nuevo con todos los datos
     @PostMapping("/crearFull")
     public UsuariosEntity crearUsuarioFull(@RequestBody UsuariosDTO dto) {
-        UsuariosEntity usuario=new UsuariosEntity();  
-        usuario.setNombre(dto.getNombre());
-        usuario.setCorreo(dto.getCorreo());
-        usuario.setPassword(dto.getPassword());
-        usuario.setTelefono(dto.getTelefono());
-        usuario.setDireccion(dto.getDireccion());  
+        UsuariosEntity usuario=new UsuariosEntity(); 
+        try{
+            usuario.setNombre(dto.getNombre());
+            usuario.setCorreo(dto.getCorreo());
+            usuario.setPassword(dto.getPassword());
+            usuario.setTelefono(dto.getTelefono());
+            usuario.setDireccion(dto.getDireccion());
+        }catch(IllegalArgumentException e){
+            throw new RuntimeException("Correo invalido");
+        }
+          
         return usuariosService.crearUsuario(usuario);
     }
 

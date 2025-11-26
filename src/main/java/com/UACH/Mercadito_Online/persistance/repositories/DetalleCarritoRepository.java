@@ -1,7 +1,7 @@
 package com.UACH.Mercadito_Online.persistance.repositories;
 
 import com.UACH.Mercadito_Online.persistance.entities.DetalleCarritoEntity;
-import com.UACH.Mercadito_Online.persistance.entities.DetalleCarritoID;
+//import com.UACH.Mercadito_Online.persistance.entities.DetalleCarritoID;
 import com.UACH.Mercadito_Online.persistance.entities.CarritoEntity;
 import com.UACH.Mercadito_Online.persistance.entities.ProductosEntity;
 import org.springframework.data.jpa.repository.JpaRepository;

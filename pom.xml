@@ -80,7 +80,11 @@
             <artifactId>camel-log-starter</artifactId>
             <version>4.15.0</version>
         </dependency>
-
+		<dependency>
+			<groupId>org.apache.camel</groupId>
+			<artifactId>camel-timer</artifactId>
+			<version>4.15.0</version>
+		</dependency>
 
     </dependencies>
 
